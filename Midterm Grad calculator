@@ -19,72 +19,63 @@
 
         .container {
             background-color: #ffffff;
-            border-radius: 12px;
+            border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 1000px;
-            padding: 40px;
+            width: 90%;
+            max-width: 900px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 20px;
         }
 
         h1 {
             text-align: center;
-            font-size: 2.5em;
+            font-size: 2em;
             color: #333;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .section-container {
             display: flex;
-            gap: 30px;
-            justify-content: space-between;
+            gap: 20px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .section {
             background-color: #f9f9f9;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            padding: 25px;
+            padding: 15px;
             flex: 1;
             min-width: 300px;
-            max-width: 450px;
-            transition: transform 0.3s ease;
-        }
-
-        .section:hover {
-            transform: translateY(-5px);
+            max-width: 400px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            font-size: 1.8em;
+            font-size: 1.5em;
             color: #4CAF50;
-            text-align: center;
-            margin-bottom: 20px;
-            font-weight: 500;
+            margin-bottom: 15px;
         }
 
         label {
-            font-size: 14px;
+            font-size: 13px;
             color: #555;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             display: block;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 16px;
+            padding: 12px; /* Increased padding for better touch */
+            margin-bottom: 15px; /* Increased margin between fields */
             border: 1px solid #ddd;
             border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
+            font-size: 14px;
             background-color: #fafafa;
             transition: border 0.3s;
+            box-sizing: border-box; /* Ensure padding is included in width */
         }
 
         input:focus {
@@ -94,24 +85,23 @@
 
         button {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: background-color 0.3s;
         }
 
         button:hover {
             background-color: #45a049;
-            transform: translateY(-3px);
         }
 
         .result {
             text-align: center;
-            font-size: 1.3em;
+            font-size: 1.2em;
             color: #333;
             font-weight: bold;
         }
@@ -121,7 +111,7 @@
         }
 
         .message {
-            font-size: 1.2em;
+            font-size: 1.1em;
             color: #333;
             font-weight: 500;
         }
@@ -136,16 +126,16 @@
 
         .computation {
             font-size: 1em;
-            margin-top: 20px;
+            margin-top: 15px;
             color: #555;
-            padding: 15px;
+            padding: 12px;
             background-color: #f1f1f1;
             border-radius: 8px;
             line-height: 1.5;
         }
 
         .computation p {
-            margin: 5px 0;
+            margin: 4px 0;
         }
 
         @media (max-width: 768px) {
@@ -160,29 +150,28 @@
     <div class="container">
         <h1>Grade Calculator</h1>
 
-        <!-- Section Container for Lecture and Laboratory -->
         <div class="section-container">
             <!-- Lecture Form -->
             <div class="section">
                 <h2>Lecture Prelim Grade</h2>
                 <form id="lectureForm">
                     <label for="prelimExam">Prelim Exam:</label>
-                    <input type="number" id="prelimExam" placeholder="Enter Prelim Exam Score (0-100)" required><br>
+                    <input type="number" id="prelimExam" placeholder="Prelim Exam Score (0-100)" required><br>
 
                     <label for="essay">Essay:</label>
-                    <input type="number" id="essay" placeholder="Enter Essay Score (0-100)" required><br>
+                    <input type="number" id="essay" placeholder="Essay Score (0-100)" required><br>
 
                     <label for="pvm">PVM:</label>
-                    <input type="number" id="pvm" placeholder="Enter PVM Score (0-100)" required><br>
+                    <input type="number" id="pvm" placeholder="PVM Score (0-100)" required><br>
 
                     <label for="javaBasics">Java Basics:</label>
-                    <input type="number" id="javaBasics" placeholder="Enter Java Basics Score (0-100)" required><br>
+                    <input type="number" id="javaBasics" placeholder="Java Basics Score (0-100)" required><br>
 
                     <label for="introJs">Intro to JS:</label>
-                    <input type="number" id="introJs" placeholder="Enter Intro to JS Score (0-100)" required><br>
+                    <input type="number" id="introJs" placeholder="Intro to JS Score (0-100)" required><br>
 
                     <label for="lectureAbsences">Lecture Absences:</label>
-                    <input type="number" id="lectureAbsences" placeholder="Enter Number of Absences" required><br>
+                    <input type="number" id="lectureAbsences" placeholder="Lecture Absences" required><br>
 
                     <button type="button" onclick="calculateLectureGrade()">Calculate Lecture Grade</button>
                 </form>
@@ -199,31 +188,31 @@
                 <h2>Laboratory Prelim Grade</h2>
                 <form id="labForm">
                     <label for="java1">Java 1:</label>
-                    <input type="number" id="java1" placeholder="Enter Java 1 Score (0-100)" required><br>
+                    <input type="number" id="java1" placeholder="Java 1 Score (0-100)" required><br>
 
                     <label for="java2">Java 2:</label>
-                    <input type="number" id="java2" placeholder="Enter Java 2 Score (0-100)" required><br>
+                    <input type="number" id="java2" placeholder="Java 2 Score (0-100)" required><br>
 
                     <label for="js1">JS1:</label>
-                    <input type="number" id="js1" placeholder="Enter JS1 Score (0-100)" required><br>
+                    <input type="number" id="js1" placeholder="JS1 Score (0-100)" required><br>
 
                     <label for="js2">JS2:</label>
-                    <input type="number" id="js2" placeholder="Enter JS2 Score (0-100)" required><br>
+                    <input type="number" id="js2" placeholder="JS2 Score (0-100)" required><br>
 
                     <label for="mp1">MP1:</label>
-                    <input type="number" id="mp1" placeholder="Enter MP1 Score (0-100)" required><br>
+                    <input type="number" id="mp1" placeholder="MP1 Score (0-100)" required><br>
 
                     <label for="mp2">MP2:</label>
-                    <input type="number" id="mp2" placeholder="Enter MP2 Score (0-100)" required><br>
+                    <input type="number" id="mp2" placeholder="MP2 Score (0-100)" required><br>
 
                     <label for="mp3">MP3:</label>
-                    <input type="number" id="mp3" placeholder="Enter MP3 Score (0-100)" required><br>
+                    <input type="number" id="mp3" placeholder="MP3 Score (0-100)" required><br>
 
                     <label for="mp3Docu">MP3 (Documentation):</label>
-                    <input type="number" id="mp3Docu" placeholder="Enter MP3 Documentation Score (0-100)" required><br>
+                    <input type="number" id="mp3Docu" placeholder="MP3 Documentation Score (0-100)" required><br>
 
                     <label for="labAbsences">Lab Absences:</label>
-                    <input type="number" id="labAbsences" placeholder="Enter Number of Lab Absences" required><br>
+                    <input type="number" id="labAbsences" placeholder="Lab Absences" required><br>
 
                     <button type="button" onclick="calculateLabGrade()">Calculate Lab Grade</button>
                 </form>
@@ -234,10 +223,6 @@
                 <div id="labMessage" class="message"></div>
                 <div id="labComputation" class="computation"></div>
             </div>
-        </div>
-
-        <div class="footer">
-            <p>Created by <a href="#">Your Name</a></p>
         </div>
     </div>
 
