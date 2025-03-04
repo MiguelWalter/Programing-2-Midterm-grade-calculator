@@ -120,16 +120,32 @@
             color: #4CAF50;
         }
 
-        .footer {
-            text-align: center;
-            font-size: 14px;
-            color: #777;
-            margin-top: 30px;
+        .message {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 500;
         }
 
-        .footer a {
+        .pass {
             color: #4CAF50;
-            text-decoration: none;
+        }
+
+        .fail {
+            color: #f44336;
+        }
+
+        .computation {
+            font-size: 1em;
+            margin-top: 20px;
+            color: #555;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            line-height: 1.5;
+        }
+
+        .computation p {
+            margin: 5px 0;
         }
 
         @media (max-width: 768px) {
@@ -174,6 +190,8 @@
                 <div class="result">
                     Lecture Prelim Grade: <span id="lectureGrade">N/A</span>
                 </div>
+                <div id="lectureMessage" class="message"></div>
+                <div id="lectureComputation" class="computation"></div>
             </div>
 
             <!-- Laboratory Form -->
@@ -213,6 +231,8 @@
                 <div class="result">
                     Laboratory Prelim Grade: <span id="labGrade">N/A</span>
                 </div>
+                <div id="labMessage" class="message"></div>
+                <div id="labComputation" class="computation"></div>
             </div>
         </div>
 
@@ -242,6 +262,28 @@
 
             // Display result
             document.getElementById("lectureGrade").innerText = lectureGrade.toFixed(2);
+
+            // Show computation breakdown
+            let computationText = `
+                <p><strong>Prelim Exam (60%):</strong> ${prelimExam} * 0.60 = ${(prelimExam * 0.6).toFixed(2)}</p>
+                <p><strong>Prelim Quizzes Average (60%):</strong> (${essay} + ${pvm} + ${javaBasics} + ${introJs}) / 4 = ${prelimQuizzes.toFixed(2)} * 0.60 = ${(prelimQuizzes * 0.6).toFixed(2)}</p>
+                <p><strong>Attendance (40%):</strong> 100 - (${lectureAbsences} * 10) = ${attendance} * 0.40 = ${(attendance * 0.4).toFixed(2)}</p>
+                <p><strong>Prelim Class Standing (40%):</strong> ${prelimClassStanding.toFixed(2)}</p>
+                <p><strong>Final Lecture Grade:</strong> ${lectureGrade.toFixed(2)}</p>
+            `;
+            document.getElementById("lectureComputation").innerHTML = computationText;
+
+            // Praise or encouragement message
+            let message = document.getElementById("lectureMessage");
+            if (lectureGrade >= 75) {
+                message.innerText = "Great job! You passed. Keep up the hard work!";
+                message.classList.add("pass");
+                message.classList.remove("fail");
+            } else {
+                message.innerText = "Don't give up! Keep pushing, you can do it!";
+                message.classList.add("fail");
+                message.classList.remove("pass");
+            }
         }
 
         // Function to calculate the Laboratory Prelim Grade
@@ -270,6 +312,28 @@
 
             // Display result
             document.getElementById("labGrade").innerText = labGrade.toFixed(2);
+
+            // Show computation breakdown
+            let computationText = `
+                <p><strong>Prelim Exam (60%):</strong> ${java1} * 0.20 + ${java2} * 0.30 + ${js1} * 0.20 + ${js2} * 0.30 = ${prelimExam.toFixed(2)}</p>
+                <p><strong>Lab Work (60%):</strong> (${mp1} + ${mp2} + ${mp3} + ${mp3Docu}) / 4 = ${(labWork).toFixed(2)} * 0.60 = ${(labWork * 0.6).toFixed(2)}</p>
+                <p><strong>Attendance (40%):</strong> 100 - (${labAbsences} * 10) = ${attendance} * 0.40 = ${(attendance * 0.4).toFixed(2)}</p>
+                <p><strong>Prelim Class Standing (40%):</strong> ${prelimClassStanding.toFixed(2)}</p>
+                <p><strong>Final Laboratory Grade:</strong> ${labGrade.toFixed(2)}</p>
+            `;
+            document.getElementById("labComputation").innerHTML = computationText;
+
+            // Praise or encouragement message
+            let message = document.getElementById("labMessage");
+            if (labGrade >= 75) {
+                message.innerText = "Great job! You passed. Keep up the hard work!";
+                message.classList.add("pass");
+                message.classList.remove("fail");
+            } else {
+                message.innerText = "Don't give up! Keep pushing, you can do it!";
+                message.classList.add("fail");
+                message.classList.remove("pass");
+            }
         }
     </script>
 </body>
