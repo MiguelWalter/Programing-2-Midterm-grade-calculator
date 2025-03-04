@@ -1,0 +1,230 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class GradeCalculator extends JFrame {
+
+    // Declare fields for Lecture and Laboratory
+    private JTextField prelimExamField, essayField, pvmField, javaBasicsField, introJsField, lectureAbsencesField;
+    private JTextField java1Field, java2Field, js1Field, js2Field, mp1Field, mp2Field, mp3Field, mp3DocuField, labAbsencesField;
+    private JLabel lectureGradeLabel, labGradeLabel, lectureMessageLabel, labMessageLabel;
+    private JTextArea lectureComputationArea, labComputationArea;
+
+    public GradeCalculator() {
+        setTitle("Grade Calculator");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        setSize(800, 600);
+        setLocationRelativeTo(null); // Center the window
+
+        // Main container
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(1, 2, 10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Lecture Panel
+        JPanel lecturePanel = createLecturePanel();
+        mainPanel.add(lecturePanel);
+
+        // Laboratory Panel
+        JPanel labPanel = createLabPanel();
+        mainPanel.add(labPanel);
+
+        // Add main panel to frame
+        add(mainPanel);
+        setVisible(true);
+    }
+
+    private JPanel createLecturePanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(new Color(240, 240, 240));
+        panel.setBorder(BorderFactory.createTitledBorder("Lecture Prelim Grade"));
+
+        // Input fields
+        prelimExamField = createInputField(panel, "Prelim Exam:");
+        essayField = createInputField(panel, "Essay:");
+        pvmField = createInputField(panel, "PVM:");
+        javaBasicsField = createInputField(panel, "Java Basics:");
+        introJsField = createInputField(panel, "Intro to JS:");
+        lectureAbsencesField = createInputField(panel, "Lecture Absences:");
+
+        // Calculate button
+        JButton calcLectureGradeButton = new JButton("Calculate Lecture Grade");
+        calcLectureGradeButton.setBackground(new Color(76, 175, 80));
+        calcLectureGradeButton.setForeground(Color.WHITE);
+        calcLectureGradeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculateLectureGrade();
+            }
+        });
+        panel.add(calcLectureGradeButton);
+
+        // Result labels
+        lectureGradeLabel = new JLabel("Lecture Prelim Grade: N/A");
+        lectureMessageLabel = new JLabel("");
+        lectureComputationArea = new JTextArea(5, 20);
+        lectureComputationArea.setEditable(false);
+        lectureComputationArea.setBackground(new Color(255, 255, 255));
+        lectureComputationArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        panel.add(lectureGradeLabel);
+        panel.add(lectureMessageLabel);
+        panel.add(new JScrollPane(lectureComputationArea));
+
+        return panel;
+    }
+
+    private JPanel createLabPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(new Color(240, 240, 240));
+        panel.setBorder(BorderFactory.createTitledBorder("Laboratory Prelim Grade"));
+
+        // Input fields
+        java1Field = createInputField(panel, "Java 1:");
+        java2Field = createInputField(panel, "Java 2:");
+        js1Field = createInputField(panel, "JS1:");
+        js2Field = createInputField(panel, "JS2:");
+        mp1Field = createInputField(panel, "MP1:");
+        mp2Field = createInputField(panel, "MP2:");
+        mp3Field = createInputField(panel, "MP3:");
+        mp3DocuField = createInputField(panel, "MP3 (Documentation):");
+        labAbsencesField = createInputField(panel, "Lab Absences:");
+
+        // Calculate button
+        JButton calcLabGradeButton = new JButton("Calculate Lab Grade");
+        calcLabGradeButton.setBackground(new Color(76, 175, 80));
+        calcLabGradeButton.setForeground(Color.WHITE);
+        calcLabGradeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculateLabGrade();
+            }
+        });
+        panel.add(calcLabGradeButton);
+
+        // Result labels
+        labGradeLabel = new JLabel("Laboratory Prelim Grade: N/A");
+        labMessageLabel = new JLabel("");
+        labComputationArea = new JTextArea(5, 20);
+        labComputationArea.setEditable(false);
+        labComputationArea.setBackground(new Color(255, 255, 255));
+        labComputationArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        panel.add(labGradeLabel);
+        panel.add(labMessageLabel);
+        panel.add(new JScrollPane(labComputationArea));
+
+        return panel;
+    }
+
+    private JTextField createInputField(JPanel panel, String labelText) {
+        JLabel label = new JLabel(labelText);
+        JTextField textField = new JTextField(10);
+        textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, textField.getPreferredSize().height));
+        panel.add(label);
+        panel.add(textField);
+        return textField;
+    }
+
+    private void calculateLectureGrade() {
+        try {
+            double prelimExam = Double.parseDouble(prelimExamField.getText());
+            double essay = Double.parseDouble(essayField.getText());
+            double pvm = Double.parseDouble(pvmField.getText());
+            double javaBasics = Double.parseDouble(javaBasicsField.getText());
+            double introJs = Double.parseDouble(introJsField.getText());
+            int lectureAbsences = Integer.parseInt(lectureAbsencesField.getText());
+
+            double prelimQuizzes = (essay + pvm + javaBasics + introJs) / 4;
+            double attendancePenalty = lectureAbsences * 10;
+            double attendance = Math.max(100 - attendancePenalty, 0);
+
+            double prelimClassStanding = (prelimQuizzes * 0.6) + (attendance * 0.4);
+            double lectureGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
+
+            lectureGradeLabel.setText("Lecture Prelim Grade: " + String.format("%.2f", lectureGrade));
+            lectureComputationArea.setText(getLectureComputationText(prelimExam, essay, pvm, javaBasics, introJs, lectureAbsences, prelimQuizzes, attendance, prelimClassStanding, lectureGrade));
+
+            if (lectureGrade >= 75) {
+                lectureMessageLabel.setText("Great job! You passed. Keep up the hard work!");
+                lectureMessageLabel.setForeground(new Color(76, 175, 80)); // Green
+            } else {
+                lectureMessageLabel.setText("Don't give up! Keep pushing, you can do it!");
+                lectureMessageLabel.setForeground(Color.RED); // Red
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Please enter valid numbers in all fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private String getLectureComputationText(double prelimExam, double essay, double pvm, double javaBasics, double introJs, int lectureAbsences, double prelimQuizzes, double attendance, double prelimClassStanding, double lectureGrade) {
+        return String.format(
+            "Prelim Exam (60%%): %.2f * 0.60 = %.2f\n" +
+            "Prelim Quizzes Average (60%%): (%.2f + %.2f + %.2f + %.2f) / 4 = %.2f * 0.60 = %.2f\n" +
+            "Attendance (40%%): 100 - (%d * 10) = %.2f * 0.40 = %.2f\n" +
+            "Prelim Class Standing (40%%): %.2f\n" +
+            "Final Lecture Grade: %.2f",
+            prelimExam, prelimExam * 0.6,
+            essay, pvm, javaBasics, introJs, prelimQuizzes, prelimQuizzes * 0.6,
+            lectureAbsences, attendance, attendance * 0.4,
+            prelimClassStanding, lectureGrade
+        );
+    }
+
+    private void calculateLabGrade() {
+        try {
+            double java1 = Double.parseDouble(java1Field.getText());
+            double java2 = Double.parseDouble(java2Field.getText());
+            double js1 = Double.parseDouble(js1Field.getText());
+            double js2 = Double.parseDouble(js2Field.getText());
+            double mp1 = Double.parseDouble(mp1Field.getText());
+            double mp2 = Double.parseDouble(mp2Field.getText());
+            double mp3 = Double.parseDouble(mp3Field.getText());
+            double mp3Docu = Double.parseDouble(mp3DocuField.getText());
+            int labAbsences = Integer.parseInt(labAbsencesField.getText());
+
+            double prelimExam = (java1 * 0.2) + (java2 * 0.3) + (js1 * 0.2) + (js2 * 0.3);
+            double labWork = (mp1 + mp2 + mp3 + mp3Docu) / 4;
+            double attendancePenalty = labAbsences * 10;
+            double attendance = Math.max(100 - attendancePenalty, 0);
+
+            double prelimClassStanding = (labWork * 0.6) + (attendance * 0.4);
+            double labGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
+
+            labGradeLabel.setText("Laboratory Prelim Grade: " + String.format("%.2f", labGrade));
+            labComputationArea.setText(getLabComputationText(java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu, labAbsences, prelimExam, labWork, attendance, prelimClassStanding, labGrade));
+
+            if (labGrade >= 75) {
+                labMessageLabel.setText("Great job! You passed. Keep up the hard work!");
+                labMessageLabel.setForeground(new Color(76, 175, 80)); // Green
+            } else {
+                labMessageLabel.setText("Don't give up! Keep pushing, you can do it!");
+                labMessageLabel.setForeground(Color.RED); // Red
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Please enter valid numbers in all fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private String getLabComputationText(double java1, double java2, double js1, double js2, double mp1, double mp2, double mp3, double mp3Docu, int labAbsences, double prelimExam, double labWork, double attendance, double prelimClassStanding, double labGrade) {
+        return String.format(
+            "Prelim Exam (60%%): %.2f * 0.20 + %.2f * 0.30 + %.2f * 0.20 + %.2f * 0.30 = %.2f\n" +
+            "Lab Work (60%%): (%.2f + %.2f + %.2f + %.2f) / 4 = %.2f * 0.60 = %.2f\n" +
+            "Attendance (40%%): 100 - (%d * 10) = %.2f * 0.40 = %.2f\n" +
+            "Prelim Class Standing (40%%): %.2f\n" +
+            "Final Laboratory Grade: %.2f",
+            java1, java2, js1, js2, prelimExam,
+            mp1, mp2, mp3, mp3Docu, labWork, labWork * 0.6,
+            labAbsences, attendance, attendance * 0.4,
+            prelimClassStanding, labGrade
+        );
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new GradeCalculator());
+    }
+}
