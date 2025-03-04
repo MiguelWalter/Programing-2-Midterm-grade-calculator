@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #f5f7fa, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 1000px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .section-container {
+            display: flex;
+            gap: 30px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            flex: 1;
+            min-width: 300px;
+            max-width: 450px;
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #fafafa;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+
+        .result {
+            text-align: center;
+            font-size: 1.3em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .result span {
+            color: #4CAF50;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            margin-top: 30px;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .section-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Grade Calculator</h1>
+
+        <!-- Section Container for Lecture and Laboratory -->
+        <div class="section-container">
+            <!-- Lecture Form -->
+            <div class="section">
+                <h2>Lecture Prelim Grade</h2>
+                <form id="lectureForm">
+                    <label for="prelimExam">Prelim Exam:</label>
+                    <input type="number" id="prelimExam" placeholder="Enter Prelim Exam Score (0-100)" required><br>
+
+                    <label for="essay">Essay:</label>
+                    <input type="number" id="essay" placeholder="Enter Essay Score (0-100)" required><br>
+
+                    <label for="pvm">PVM:</label>
+                    <input type="number" id="pvm" placeholder="Enter PVM Score (0-100)" required><br>
+
+                    <label for="javaBasics">Java Basics:</label>
+                    <input type="number" id="javaBasics" placeholder="Enter Java Basics Score (0-100)" required><br>
+
+                    <label for="introJs">Intro to JS:</label>
+                    <input type="number" id="introJs" placeholder="Enter Intro to JS Score (0-100)" required><br>
+
+                    <label for="lectureAbsences">Lecture Absences:</label>
+                    <input type="number" id="lectureAbsences" placeholder="Enter Number of Absences" required><br>
+
+                    <button type="button" onclick="calculateLectureGrade()">Calculate Lecture Grade</button>
+                </form>
+
+                <div class="result">
+                    Lecture Prelim Grade: <span id="lectureGrade">N/A</span>
+                </div>
+            </div>
+
+            <!-- Laboratory Form -->
+            <div class="section">
+                <h2>Laboratory Prelim Grade</h2>
+                <form id="labForm">
+                    <label for="java1">Java 1:</label>
+                    <input type="number" id="java1" placeholder="Enter Java 1 Score (0-100)" required><br>
+
+                    <label for="java2">Java 2:</label>
+                    <input type="number" id="java2" placeholder="Enter Java 2 Score (0-100)" required><br>
+
+                    <label for="js1">JS1:</label>
+                    <input type="number" id="js1" placeholder="Enter JS1 Score (0-100)" required><br>
+
+                    <label for="js2">JS2:</label>
+                    <input type="number" id="js2" placeholder="Enter JS2 Score (0-100)" required><br>
+
+                    <label for="mp1">MP1:</label>
+                    <input type="number" id="mp1" placeholder="Enter MP1 Score (0-100)" required><br>
+
+                    <label for="mp2">MP2:</label>
+                    <input type="number" id="mp2" placeholder="Enter MP2 Score (0-100)" required><br>
+
+                    <label for="mp3">MP3:</label>
+                    <input type="number" id="mp3" placeholder="Enter MP3 Score (0-100)" required><br>
+
+                    <label for="mp3Docu">MP3 (Documentation):</label>
+                    <input type="number" id="mp3Docu" placeholder="Enter MP3 Documentation Score (0-100)" required><br>
+
+                    <label for="labAbsences">Lab Absences:</label>
+                    <input type="number" id="labAbsences" placeholder="Enter Number of Lab Absences" required><br>
+
+                    <button type="button" onclick="calculateLabGrade()">Calculate Lab Grade</button>
+                </form>
+
+                <div class="result">
+                    Laboratory Prelim Grade: <span id="labGrade">N/A</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Created by <a href="#">Your Name</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Function to calculate the Lecture Prelim Grade
+        function calculateLectureGrade() {
+            // Get inputs
+            let prelimExam = parseFloat(document.getElementById("prelimExam").value);
+            let essay = parseFloat(document.getElementById("essay").value);
+            let pvm = parseFloat(document.getElementById("pvm").value);
+            let javaBasics = parseFloat(document.getElementById("javaBasics").value);
+            let introJs = parseFloat(document.getElementById("introJs").value);
+            let lectureAbsences = parseFloat(document.getElementById("lectureAbsences").value);
+
+            // Prelim Class Standing Calculation
+            let prelimQuizzes = (essay + pvm + javaBasics + introJs) / 4;
+            let attendancePenalty = lectureAbsences * 10; // Subtract 10 points for each absence
+            let attendance = Math.max(100 - attendancePenalty, 0); // Ensure it doesn't go below 0
+
+            let prelimClassStanding = (prelimQuizzes * 0.6) + (attendance * 0.4);
+            let lectureGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
+
+            // Display result
+            document.getElementById("lectureGrade").innerText = lectureGrade.toFixed(2);
+        }
+
+        // Function to calculate the Laboratory Prelim Grade
+        function calculateLabGrade() {
+            // Get inputs
+            let java1 = parseFloat(document.getElementById("java1").value);
+            let java2 = parseFloat(document.getElementById("java2").value);
+            let js1 = parseFloat(document.getElementById("js1").value);
+            let js2 = parseFloat(document.getElementById("js2").value);
+            let mp1 = parseFloat(document.getElementById("mp1").value);
+            let mp2 = parseFloat(document.getElementById("mp2").value);
+            let mp3 = parseFloat(document.getElementById("mp3").value);
+            let mp3Docu = parseFloat(document.getElementById("mp3Docu").value);
+            let labAbsences = parseFloat(document.getElementById("labAbsences").value);
+
+            // Prelim Exam Calculation
+            let prelimExam = (java1 * 0.2) + (java2 * 0.3) + (js1 * 0.2) + (js2 * 0.3);
+
+            // Lab Work Calculation
+            let labWork = (mp1 + mp2 + mp3 + mp3Docu) / 4;
+            let attendancePenalty = labAbsences * 10; // Subtract 10 points for each absence
+            let attendance = Math.max(100 - attendancePenalty, 0); // Ensure it doesn't go below 0
+
+            let prelimClassStanding = (labWork * 0.6) + (attendance * 0.4);
+            let labGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
+
+            // Display result
+            document.getElementById("labGrade").innerText = labGrade.toFixed(2);
+        }
+    </script>
+</body>
+</html>
