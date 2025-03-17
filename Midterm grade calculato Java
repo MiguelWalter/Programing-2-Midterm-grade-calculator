@@ -1,11 +1,11 @@
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GradeCalculator extends JFrame {
 
-    // Declare fields for Lecture and Laboratory
     private JTextField prelimExamField, essayField, pvmField, javaBasicsField, introJsField, lectureAbsencesField;
     private JTextField java1Field, java2Field, js1Field, js2Field, mp1Field, mp2Field, mp3Field, mp3DocuField, labAbsencesField;
     private JLabel lectureGradeLabel, labGradeLabel, lectureMessageLabel, labMessageLabel;
@@ -18,10 +18,11 @@ public class GradeCalculator extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null); // Center the window
 
-        // Main container
+        // Main container with black background
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(1, 2, 10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.setLayout(new GridLayout(1, 2, 20, 10)); // Increase spacing between panels
+        mainPanel.setBackground(Color.BLACK); // Set background to black
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Lecture Panel
         JPanel lecturePanel = createLecturePanel();
@@ -39,10 +40,17 @@ public class GradeCalculator extends JFrame {
     private JPanel createLecturePanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(new Color(240, 240, 240));
-        panel.setBorder(BorderFactory.createTitledBorder("Lecture Prelim Grade"));
+        panel.setBackground(Color.BLACK); // Set panel background to black
+        panel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(76, 175, 80), 2),
+                "Lecture Prelim Grade",
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION,
+                new Font("Segoe UI", Font.BOLD, 16),
+                new Color(76, 175, 80)
+        ));
 
-        // Input fields
+        // Input fields with light text color
         prelimExamField = createInputField(panel, "Prelim Exam:");
         essayField = createInputField(panel, "Essay:");
         pvmField = createInputField(panel, "PVM:");
@@ -52,8 +60,7 @@ public class GradeCalculator extends JFrame {
 
         // Calculate button
         JButton calcLectureGradeButton = new JButton("Calculate Lecture Grade");
-        calcLectureGradeButton.setBackground(new Color(76, 175, 80));
-        calcLectureGradeButton.setForeground(Color.WHITE);
+        styleButton(calcLectureGradeButton);
         calcLectureGradeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -62,12 +69,15 @@ public class GradeCalculator extends JFrame {
         });
         panel.add(calcLectureGradeButton);
 
-        // Result labels
+        // Result labels with light color for text
         lectureGradeLabel = new JLabel("Lecture Prelim Grade: N/A");
+        lectureGradeLabel.setForeground(Color.WHITE);
         lectureMessageLabel = new JLabel("");
+        lectureMessageLabel.setForeground(Color.WHITE);
         lectureComputationArea = new JTextArea(5, 20);
         lectureComputationArea.setEditable(false);
-        lectureComputationArea.setBackground(new Color(255, 255, 255));
+        lectureComputationArea.setBackground(Color.BLACK);
+        lectureComputationArea.setForeground(Color.WHITE);
         lectureComputationArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         panel.add(lectureGradeLabel);
@@ -80,10 +90,17 @@ public class GradeCalculator extends JFrame {
     private JPanel createLabPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(new Color(240, 240, 240));
-        panel.setBorder(BorderFactory.createTitledBorder("Laboratory Prelim Grade"));
+        panel.setBackground(Color.BLACK); // Set panel background to black
+        panel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(76, 175, 80), 2),
+                "Laboratory Prelim Grade",
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION,
+                new Font("Segoe UI", Font.BOLD, 16),
+                new Color(76, 175, 80)
+        ));
 
-        // Input fields
+        // Input fields with light text color
         java1Field = createInputField(panel, "Java 1:");
         java2Field = createInputField(panel, "Java 2:");
         js1Field = createInputField(panel, "JS1:");
@@ -96,8 +113,7 @@ public class GradeCalculator extends JFrame {
 
         // Calculate button
         JButton calcLabGradeButton = new JButton("Calculate Lab Grade");
-        calcLabGradeButton.setBackground(new Color(76, 175, 80));
-        calcLabGradeButton.setForeground(Color.WHITE);
+        styleButton(calcLabGradeButton);
         calcLabGradeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -106,12 +122,15 @@ public class GradeCalculator extends JFrame {
         });
         panel.add(calcLabGradeButton);
 
-        // Result labels
+        // Result labels with light color for text
         labGradeLabel = new JLabel("Laboratory Prelim Grade: N/A");
+        labGradeLabel.setForeground(Color.WHITE);
         labMessageLabel = new JLabel("");
+        labMessageLabel.setForeground(Color.WHITE);
         labComputationArea = new JTextArea(5, 20);
         labComputationArea.setEditable(false);
-        labComputationArea.setBackground(new Color(255, 255, 255));
+        labComputationArea.setBackground(Color.BLACK);
+        labComputationArea.setForeground(Color.WHITE);
         labComputationArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         panel.add(labGradeLabel);
@@ -123,11 +142,35 @@ public class GradeCalculator extends JFrame {
 
     private JTextField createInputField(JPanel panel, String labelText) {
         JLabel label = new JLabel(labelText);
-        JTextField textField = new JTextField(10);
-        textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, textField.getPreferredSize().height));
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Use Segoe UI for modern look
+        label.setForeground(Color.WHITE); // Set label color to white
+        JTextField textField = new JTextField(5); // Set the number of columns to 5 for a shorter width
+        textField.setMaximumSize(new Dimension(100, textField.getPreferredSize().height)); // Set a maximum width
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Modern font for text field
+        textField.setForeground(Color.WHITE); // Set text color to white
+        textField.setBackground(Color.DARK_GRAY); // Set text field background to dark gray
+        textField.setCaretColor(Color.GREEN); // Set caret color (blinking cursor) to green
         panel.add(label);
         panel.add(textField);
         return textField;
+    }
+
+    private void styleButton(JButton button) {
+        button.setBackground(new Color(76, 175, 80));
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(200, 40)); // Set fixed size for buttons
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(56, 142, 60)); // Darker green on hover
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(76, 175, 80)); // Original color
+            }
+        });
     }
 
     private void calculateLectureGrade() {
