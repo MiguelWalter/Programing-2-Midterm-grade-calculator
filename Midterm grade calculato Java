@@ -6,10 +6,12 @@ import java.awt.event.ActionListener;
 
 public class GradeCalculator extends JFrame {
 
-    private JTextField prelimExamField, essayField, pvmField, javaBasicsField, introJsField, lectureAbsencesField;
-    private JTextField java1Field, java2Field, js1Field, js2Field, mp1Field, mp2Field, mp3Field, mp3DocuField, labAbsencesField;
+    private JTextField prelimExamField, essayField, pvmField, javaBasicsField, introJsField;
+    private JTextField java1Field, java2Field, js1Field, js2Field, mp1Field, mp2Field, mp3Field, mp3DocuField;
     private JLabel lectureGradeLabel, labGradeLabel, lectureMessageLabel, labMessageLabel;
     private JTextArea lectureComputationArea, labComputationArea;
+    private JCheckBox[] absenceCheckBoxes; // Array to hold the checkboxes for absence dates
+    private JCheckBox[] labAbsenceCheckBoxes; // Array to hold the checkboxes for lab absence dates
 
     public GradeCalculator() {
         setTitle("Grade Calculator");
@@ -53,10 +55,43 @@ public class GradeCalculator extends JFrame {
         // Input fields with light text color
         prelimExamField = createInputField(panel, "Prelim Exam:");
         essayField = createInputField(panel, "Essay:");
-        pvmField = createInputField(panel, "PVM:");
-        javaBasicsField = createInputField(panel, "Java Basics:");
-        introJsField = createInputField(panel, "Intro to JS:");
-        lectureAbsencesField = createInputField(panel, "Lecture Absences:");
+        pvmField = createInputField(panel, "PVM (Max 60):");
+        javaBasicsField = createInputField(panel, "Java Basics (Max 40):");
+        introJsField = createInputField(panel, "Intro to JS (Max 40):");
+
+        // Add checkboxes for specific absence dates
+        JPanel absencePanel = new JPanel();
+        absencePanel.setLayout(new GridLayout(5, 1)); // Vertical layout for checkboxes
+        absencePanel.setBackground(Color.BLACK);
+        absencePanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(76, 175, 80), 2),
+                "Lecture Absences",
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION,
+                new Font("Segoe UI", Font.BOLD, 14),
+                new Color(76, 175, 80)
+        ));
+
+        // Dates for checkboxes
+        String[] absenceDates = {
+            "January 21, 2025",
+            "January 28, 2025",
+            "February 04, 2025",
+            "February 11, 2025",
+            "February 18, 2025"
+        };
+
+        absenceCheckBoxes = new JCheckBox[absenceDates.length];
+
+        // Create checkboxes for each absence date
+        for (int i = 0; i < absenceDates.length; i++) {
+            absenceCheckBoxes[i] = new JCheckBox(absenceDates[i]);
+            absenceCheckBoxes[i].setForeground(Color.WHITE);
+            absenceCheckBoxes[i].setBackground(Color.BLACK);
+            absencePanel.add(absenceCheckBoxes[i]);
+        }
+
+        panel.add(absencePanel);
 
         // Calculate button
         JButton calcLectureGradeButton = new JButton("Calculate Lecture Grade");
@@ -109,7 +144,40 @@ public class GradeCalculator extends JFrame {
         mp2Field = createInputField(panel, "MP2:");
         mp3Field = createInputField(panel, "MP3:");
         mp3DocuField = createInputField(panel, "MP3 (Documentation):");
-        labAbsencesField = createInputField(panel, "Lab Absences:");
+
+        // Add checkboxes for lab absences
+        JPanel labAbsencePanel = new JPanel();
+        labAbsencePanel.setLayout(new GridLayout(5, 1)); // Vertical layout for checkboxes
+        labAbsencePanel.setBackground(Color.BLACK);
+        labAbsencePanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(76, 175, 80), 2),
+                "Lab Absences",
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION,
+                new Font("Segoe UI", Font.BOLD, 14),
+                new Color(76, 175, 80)
+        ));
+
+        // Dates for lab absence checkboxes
+        String[] labAbsenceDates = {
+            "January 21, 2025",
+            "January 28, 2025",
+            "February 04, 2025",
+            "February 11, 2025",
+            "February 18, 2025"
+        };
+
+        labAbsenceCheckBoxes = new JCheckBox[labAbsenceDates.length];
+
+        // Create checkboxes for each lab absence date
+        for (int i = 0; i < labAbsenceDates.length; i++) {
+            labAbsenceCheckBoxes[i] = new JCheckBox(labAbsenceDates[i]);
+            labAbsenceCheckBoxes[i].setForeground(Color.WHITE);
+            labAbsenceCheckBoxes[i].setBackground(Color.BLACK);
+            labAbsencePanel.add(labAbsenceCheckBoxes[i]);
+        }
+
+        panel.add(labAbsencePanel);
 
         // Calculate button
         JButton calcLabGradeButton = new JButton("Calculate Lab Grade");
@@ -177,10 +245,26 @@ public class GradeCalculator extends JFrame {
         try {
             double prelimExam = Double.parseDouble(prelimExamField.getText());
             double essay = Double.parseDouble(essayField.getText());
-            double pvm = Double.parseDouble(pvmField.getText());
-            double javaBasics = Double.parseDouble(javaBasicsField.getText());
-            double introJs = Double.parseDouble(introJsField.getText());
-            int lectureAbsences = Integer.parseInt(lectureAbsencesField.getText());
+            double pvm = Math.min(Double.parseDouble(pvmField.getText()), 60);  // Enforce max value of 60
+            double javaBasics = Math.min(Double.parseDouble(javaBasicsField.getText()), 40);  // Enforce max value of 40
+            double introJs = Math.min(Double.parseDouble(introJsField.getText()), 40);  // Enforce max value of 40
+
+            // Calculate lecture absences from the selected checkboxes
+            int lectureAbsences = 0;
+            for (JCheckBox checkBox : absenceCheckBoxes) {
+                if (checkBox.isSelected()) {
+                    lectureAbsences++;
+                }
+            }
+
+            // If there are 4 or more absences, automatically fail
+            if (lectureAbsences >= 4) {
+                lectureGradeLabel.setText("Lecture Prelim Grade: FAIL");
+                lectureMessageLabel.setText("You failed the lecture due to absences.");
+                lectureMessageLabel.setForeground(Color.RED); // Red
+                lectureComputationArea.setText("You have 4 or more absences, so you automatically fail.");
+                return;
+            }
 
             double prelimQuizzes = (essay + pvm + javaBasics + introJs) / 4;
             double attendancePenalty = lectureAbsences * 10;
@@ -204,20 +288,6 @@ public class GradeCalculator extends JFrame {
         }
     }
 
-    private String getLectureComputationText(double prelimExam, double essay, double pvm, double javaBasics, double introJs, int lectureAbsences, double prelimQuizzes, double attendance, double prelimClassStanding, double lectureGrade) {
-        return String.format(
-            "Prelim Exam (60%%): %.2f * 0.60 = %.2f\n" +
-            "Prelim Quizzes Average (60%%): (%.2f + %.2f + %.2f + %.2f) / 4 = %.2f * 0.60 = %.2f\n" +
-            "Attendance (40%%): 100 - (%d * 10) = %.2f * 0.40 = %.2f\n" +
-            "Prelim Class Standing (40%%): %.2f\n" +
-            "Final Lecture Grade: %.2f",
-            prelimExam, prelimExam * 0.6,
-            essay, pvm, javaBasics, introJs, prelimQuizzes, prelimQuizzes * 0.6,
-            lectureAbsences, attendance, attendance * 0.4,
-            prelimClassStanding, lectureGrade
-        );
-    }
-
     private void calculateLabGrade() {
         try {
             double java1 = Double.parseDouble(java1Field.getText());
@@ -228,24 +298,38 @@ public class GradeCalculator extends JFrame {
             double mp2 = Double.parseDouble(mp2Field.getText());
             double mp3 = Double.parseDouble(mp3Field.getText());
             double mp3Docu = Double.parseDouble(mp3DocuField.getText());
-            int labAbsences = Integer.parseInt(labAbsencesField.getText());
 
-            double prelimExam = (java1 * 0.2) + (java2 * 0.3) + (js1 * 0.2) + (js2 * 0.3);
-            double labWork = (mp1 + mp2 + mp3 + mp3Docu) / 4;
+            // Calculate lab absences from the selected checkboxes
+            int labAbsences = 0;
+            for (JCheckBox checkBox : labAbsenceCheckBoxes) {
+                if (checkBox.isSelected()) {
+                    labAbsences++;
+                }
+            }
+
+            // If there are 4 or more absences, automatically fail
+            if (labAbsences >= 4) {
+                labGradeLabel.setText("Laboratory Prelim Grade: FAIL");
+                labMessageLabel.setText("You failed the laboratory due to absences.");
+                labMessageLabel.setForeground(Color.RED); // Red
+                labComputationArea.setText("You have 4 or more absences, so you automatically fail.");
+                return;
+            }
+
+            double prelimClassStanding = (java1 + java2 + js1 + js2 + mp1 + mp2 + mp3 + mp3Docu) / 8;
             double attendancePenalty = labAbsences * 10;
             double attendance = Math.max(100 - attendancePenalty, 0);
 
-            double prelimClassStanding = (labWork * 0.6) + (attendance * 0.4);
-            double labGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
+            double labGrade = (prelimClassStanding * 0.6) + (attendance * 0.4);
 
             labGradeLabel.setText("Laboratory Prelim Grade: " + String.format("%.2f", labGrade));
-            labComputationArea.setText(getLabComputationText(java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu, labAbsences, prelimExam, labWork, attendance, prelimClassStanding, labGrade));
+            labComputationArea.setText(getLabComputationText(java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu, labAbsences, prelimClassStanding, attendance, labGrade));
 
             if (labGrade >= 75) {
-                labMessageLabel.setText("Great job! You passed. Keep up the hard work!");
+                labMessageLabel.setText("Great job! You passed the lab. Keep up the good work!");
                 labMessageLabel.setForeground(new Color(76, 175, 80)); // Green
             } else {
-                labMessageLabel.setText("Don't give up! Keep pushing, you can do it!");
+                labMessageLabel.setText("You can still improve! Keep working hard in the lab.");
                 labMessageLabel.setForeground(Color.RED); // Red
             }
         } catch (NumberFormatException ex) {
@@ -253,21 +337,37 @@ public class GradeCalculator extends JFrame {
         }
     }
 
-    private String getLabComputationText(double java1, double java2, double js1, double js2, double mp1, double mp2, double mp3, double mp3Docu, int labAbsences, double prelimExam, double labWork, double attendance, double prelimClassStanding, double labGrade) {
-        return String.format(
-            "Prelim Exam (60%%): %.2f * 0.20 + %.2f * 0.30 + %.2f * 0.20 + %.2f * 0.30 = %.2f\n" +
-            "Lab Work (60%%): (%.2f + %.2f + %.2f + %.2f) / 4 = %.2f * 0.60 = %.2f\n" +
-            "Attendance (40%%): 100 - (%d * 10) = %.2f * 0.40 = %.2f\n" +
-            "Prelim Class Standing (40%%): %.2f\n" +
-            "Final Laboratory Grade: %.2f",
-            java1, java2, js1, js2, prelimExam,
-            mp1, mp2, mp3, mp3Docu, labWork, labWork * 0.6,
-            labAbsences, attendance, attendance * 0.4,
-            prelimClassStanding, labGrade
-        );
+    private String getLectureComputationText(double prelimExam, double essay, double pvm, double javaBasics, double introJs,
+                                              int lectureAbsences, double prelimQuizzes, double attendance, double prelimClassStanding, double lectureGrade) {
+        return "Prelim Exam: " + prelimExam + "\n" +
+               "Essay: " + essay + "\n" +
+               "PVM: " + pvm + "\n" +
+               "Java Basics: " + javaBasics + "\n" +
+               "Intro to JS: " + introJs + "\n" +
+               "Lecture Absences: " + lectureAbsences + "\n" +
+               "Prelim Quizzes (Average): " + prelimQuizzes + "\n" +
+               "Attendance: " + attendance + "\n" +
+               "Prelim Class Standing: " + prelimClassStanding + "\n" +
+               "Lecture Grade: " + lectureGrade;
+    }
+
+    private String getLabComputationText(double java1, double java2, double js1, double js2, double mp1, double mp2,
+                                         double mp3, double mp3Docu, int labAbsences, double prelimClassStanding, double attendance, double labGrade) {
+        return "Java 1: " + java1 + "\n" +
+               "Java 2: " + java2 + "\n" +
+               "JS1: " + js1 + "\n" +
+               "JS2: " + js2 + "\n" +
+               "MP1: " + mp1 + "\n" +
+               "MP2: " + mp2 + "\n" +
+               "MP3: " + mp3 + "\n" +
+               "MP3 Documentation: " + mp3Docu + "\n" +
+               "Lab Absences: " + labAbsences + "\n" +
+               "Prelim Class Standing: " + prelimClassStanding + "\n" +
+               "Attendance: " + attendance + "\n" +
+               "Lab Grade: " + labGrade;
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new GradeCalculator());
+        new GradeCalculator();
     }
 }
