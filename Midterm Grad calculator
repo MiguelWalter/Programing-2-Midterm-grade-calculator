@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -177,7 +176,6 @@
                     <label for="essay">Essay:</label>
                     <input type="number" id="essay" max="100" placeholder="Essay Score (0-100)" required><br>
 
-
                     <label for="pvm">PVM (max 60):</label>
                     <input type="number" id="pvm" max="60" placeholder="PVM Score (0-60)" required><br>
 
@@ -257,125 +255,124 @@
 
     <script>
         // Function to calculate the Lecture Prelim Grade
-function calculateLectureGrade() {
-    // Get selected absences
-    let lectureAbsences = document.querySelectorAll("#lectureAbsences input:checked");
-    let absenceCount = lectureAbsences.length;
+        function calculateLectureGrade() {
+            // Get selected absences
+            let lectureAbsences = document.querySelectorAll("#lectureAbsences input:checked");
+            let absenceCount = lectureAbsences.length;
 
-    // Check if absences are 4 or more
-    if (absenceCount >= 4) {
-        document.getElementById("lectureGrade").innerText = "Fail";
-        document.getElementById("lectureMessage").innerText = "You failed due to excessive absences.";
-        document.getElementById("lectureMessage").classList.add("fail");
-        document.getElementById("lectureMessage").classList.remove("pass");
-        document.getElementById("lectureComputation").innerHTML = ""; // Clear computation
-        return; // Exit the function to prevent further calculations
-    }
+            // Check if absences are 4 or more
+            if (absenceCount >= 4) {
+                document.getElementById("lectureGrade").innerText = "Fail";
+                document.getElementById("lectureMessage").innerText = "You failed due to excessive absences.";
+                document.getElementById("lectureMessage").classList.add("fail");
+                document.getElementById("lectureMessage").classList.remove("pass");
+                document.getElementById("lectureComputation").innerHTML = ""; // Clear computation
+                return; // Exit the function to prevent further calculations
+            }
 
-    // Get inputs
-    let prelimExam = parseFloat(document.getElementById("prelimExam").value);
-    let essay = parseFloat(document.getElementById("essay").value);
-    let pvm = Math.min(parseFloat(document.getElementById("pvm").value), 60); // Max 60
-    let javaBasics = Math.min(parseFloat(document.getElementById("javaBasics").value), 40); // Max 40
-    let introJs = Math.min(parseFloat(document.getElementById("introJs").value), 40); // Max 40
+            // Get inputs
+            let prelimExam = parseFloat(document.getElementById("prelimExam").value);
+            let essay = parseFloat(document.getElementById("essay").value);
+            let pvm = Math.min(parseFloat(document.getElementById("pvm").value), 60); // Max 60
+            let javaBasics = Math.min(parseFloat(document.getElementById("javaBasics").value), 40); // Max 40
+            let introJs = Math.min(parseFloat(document.getElementById("introJs").value), 40); // Max 40
 
-    // Prelim Class Standing Calculation
-    let prelimQuizzes = (essay + pvm + javaBasics + introJs) / 4;
-    let attendancePenalty = absenceCount * 10; // Subtract 10 points for each absence
-    let attendance = Math.max(100 - attendancePenalty, 0); // Ensure it doesn't go below 0
+            // Prelim Class Standing Calculation
+            let prelimQuizzes = (essay + pvm + javaBasics + introJs) / 4;
+            let attendancePenalty = absenceCount * 10; // Subtract 10 points for each absence
+            let attendance = Math.max(100 - attendancePenalty, 0); // Ensure it doesn't go below 0
 
-    let prelimClassStanding = (prelimQuizzes * 0.6) + (attendance * 0.4);
-    let lectureGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
+            let prelimClassStanding = (prelimQuizzes * 0.6) + (attendance * 0.4);
+            let lectureGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
 
-    // Display result
-    document.getElementById("lectureGrade").innerText = lectureGrade.toFixed(2);
+            // Display result
+            document.getElementById("lectureGrade").innerText = lectureGrade.toFixed(2);
 
-    // Show computation breakdown
-    let computationText = `
-        <p><strong>Prelim Exam (60%):</strong> ${prelimExam} * 0.60 = ${(prelimExam * 0.6).toFixed(2)}</p>
-        <p><strong>Prelim Quizzes Average (60%):</strong> (${essay} + ${pvm} + ${javaBasics} + ${introJs}) / 4 = ${prelimQuizzes.toFixed(2)} * 0.60 = ${(prelimQuizzes * 0.6).toFixed(2)}</p>
-        <p><strong>Attendance (40%):</strong> 100 - (${absenceCount} * 10) = ${attendance} * 0.40 = ${(attendance * 0.4).toFixed(2)}</p>
-        <p><strong>Prelim Class Standing (40%):</strong> ${prelimClassStanding.toFixed(2)}</p>
-        <p><strong>Final Lecture Grade:</strong> ${lectureGrade.toFixed(2)}</p>
-    `;
-    document.getElementById("lectureComputation").innerHTML = computationText;
+            // Show computation breakdown
+            let computationText = `
+                <p><strong>Prelim Exam (60%):</strong> ${prelimExam} * 0.60 = ${(prelimExam * 0.6).toFixed(2)}</p>
+                <p><strong>Prelim Quizzes Average (60%):</strong> (${essay} + ${pvm} + ${javaBasics} + ${introJs}) / 4 = ${prelimQuizzes.toFixed(2)} * 0.60 = ${(prelimQuizzes * 0.6).toFixed(2)}</p>
+                <p><strong>Attendance (40%):</strong> 100 - (${absenceCount} * 10) = ${attendance} * 0.40 = ${(attendance * 0.4).toFixed(2)}</p>
+                <p><strong>Prelim Class Standing (40%):</strong> ${prelimClassStanding.toFixed(2)}</p>
+                <p><strong>Final Lecture Grade:</strong> ${lectureGrade.toFixed(2)}</p>
+            `;
+            document.getElementById("lectureComputation").innerHTML = computationText;
 
-    // Praise or encouragement message
-    let message = document.getElementById("lectureMessage");
-    if (lectureGrade >= 75) {
-        message.innerText = "Great job! You passed. Keep up the hard work!";
-        message.classList.add("pass");
-        message.classList.remove("fail");
-    } else {
-        message.innerText = "Don't give up! Keep pushing, you can do it!";
-        message.classList.add("fail");
-        message.classList.remove("pass");
-    }
-}
+            // Praise or encouragement message
+            let message = document.getElementById("lectureMessage");
+            if (lectureGrade >= 75) {
+                message.innerText = "Great job! You passed. Keep up the hard work!";
+                message.classList.add("pass");
+                message.classList.remove("fail");
+            } else {
+                message.innerText = "Don't give up! Keep pushing, you can do it!";
+                message.classList.add("fail");
+                message.classList.remove("pass");
+            }
+        }
 
-// Function to calculate the Laboratory Prelim Grade
-function calculateLabGrade() {
-    // Get selected absences
-    let labAbsences = document.querySelectorAll("#labAbsences input:checked");
-    let absenceCount = labAbsences.length;
+        // Function to calculate the Laboratory Prelim Grade
+        function calculateLabGrade() {
+            // Get selected absences
+            let labAbsences = document.querySelectorAll("#labAbsences input:checked");
+            let absenceCount = labAbsences.length;
 
-    // Check if absences are 4 or more
-    if (absenceCount >= 4) {
-        document.getElementById("labGrade").innerText = "Fail";
-        document.getElementById("labMessage").innerText = "You failed due to excessive absences.";
-        document.getElementById("labMessage").classList.add("fail");
-        document.getElementById("labMessage").classList.remove("pass");
-        document.getElementById("labComputation").innerHTML = ""; // Clear computation
-        return; // Exit the function to prevent further calculations
-    }
+            // Check if absences are 4 or more
+            if (absenceCount >= 4) {
+                document.getElementById("labGrade").innerText = "Fail";
+                document.getElementById("labMessage").innerText = "You failed due to excessive absences.";
+                document.getElementById("labMessage").classList.add("fail");
+                document.getElementById("labMessage").classList.remove("pass");
+                document.getElementById("labComputation").innerHTML = ""; // Clear computation
+                return; // Exit the function to prevent further calculations
+            }
 
-    // Get inputs
-    let java1 = parseFloat(document.getElementById("java1").value);
-    let java2 = parseFloat(document.getElementById("java2").value);
-    let js1 = parseFloat(document.getElementById("js1").value);
-    let js2 = parseFloat(document.getElementById("js2").value);
-    let mp1 = parseFloat(document.getElementById("mp1").value);
-    let mp2 = parseFloat(document.getElementById("mp2").value);
-    let mp3 = parseFloat(document.getElementById("mp3").value);
-    let mp3Docu = parseFloat(document.getElementById("mp3Docu").value);
+            // Get inputs
+            let java1 = parseFloat(document.getElementById("java1").value);
+            let java2 = parseFloat(document.getElementById("java2").value);
+            let js1 = parseFloat(document.getElementById("js1").value);
+            let js2 = parseFloat(document.getElementById("js2").value);
+            let mp1 = parseFloat(document.getElementById("mp1").value);
+            let mp2 = parseFloat(document.getElementById("mp2").value);
+            let mp3 = parseFloat(document.getElementById("mp3").value);
+            let mp3Docu = parseFloat(document.getElementById("mp3Docu").value);
 
-    // Prelim Exam Calculation
-    let prelimExam = (java1 * 0.2) + (java2 * 0.3) + (js1 * 0.2) + (js2 * 0.3);
+            // Prelim Exam Calculation
+            let prelimExam = (java1 * 0.2) + (java2 * 0.3) + (js1 * 0.2) + (js2 * 0.3);
 
-    // Lab Work Calculation
-    let labWork = (mp1 + mp2 + mp3 + mp3Docu) / 4;
-    let attendancePenalty = absenceCount * 10; // Subtract 10 points for each absence
-    let attendance = Math.max(100 - attendancePenalty, 0); // Ensure it doesn't go below 0
+            // Lab Work Calculation
+            let labWork = (mp1 + mp2 + mp3 + mp3Docu) / 4;
+            let attendancePenalty = absenceCount * 10; // Subtract 10 points for each absence
+            let attendance = Math.max(100 - attendancePenalty, 0); // Ensure it doesn't go below 0
 
-    let prelimClassStanding = (labWork * 0.6) + (attendance * 0.4);
-    let labGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
+            let prelimClassStanding = (labWork * 0.6) + (attendance * 0.4);
+            let labGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
 
-    // Display result
-    document.getElementById("labGrade").innerText = labGrade.toFixed(2);
+            // Display result
+            document.getElementById("labGrade").innerText = labGrade.toFixed(2);
 
-    // Show computation breakdown
-    let computationText = `
-        <p><strong>Prelim Exam (60%):</strong> ${java1} * 0.20 + ${java2} * 0.30 + ${js1} * 0.20 + ${js2} * 0.30 = ${prelimExam.toFixed(2)}</p>
-        <p><strong>Lab Work (60%):</strong> (${mp1} + ${mp2} + ${mp3} + ${mp3Docu}) / 4 = ${(labWork).toFixed(2)} * 0.60 = ${(labWork * 0.6).toFixed(2)}</p>
-        <p><strong>Attendance (40%):</strong> 100 - (${absenceCount} * 10) = ${attendance} * 0.40 = ${(attendance * 0.4).toFixed(2)}</p>
-        <p><strong>Prelim Class Standing (40%):</strong> ${prelimClassStanding.toFixed(2)}</p>
-        <p><strong>Final Laboratory Grade:</strong> ${labGrade.toFixed(2)}</p>
-    `;
-    document.getElementById("labComputation").innerHTML = computationText;
+            // Show computation breakdown
+            let computationText = `
+                <p><strong>Prelim Exam (60%):</strong> (${java1} * 0.20) + (${java2} * 0.30) + (${js1} * 0.20) + (${js2} * 0.30) = ${prelimExam.toFixed(2)} * 0.60 = ${(prelimExam * 0.6).toFixed(2)}</p>
+                <p><strong>Lab Work (60%):</strong> (${mp1} + ${mp2} + ${mp3} + ${mp3Docu}) / 4 = ${labWork.toFixed(2)} * 0.60 = ${(labWork * 0.6).toFixed(2)}</p>
+                <p><strong>Attendance (40%):</strong> 100 - (${absenceCount} * 10) = ${attendance} * 0.40 = ${(attendance * 0.4).toFixed(2)}</p>
+                <p><strong>Prelim Class Standing (40%):</strong> ${prelimClassStanding.toFixed(2)}</p>
+                <p><strong>Final Lab Grade:</strong> ${labGrade.toFixed(2)}</p>
+            `;
+            document.getElementById("labComputation").innerHTML = computationText;
 
-    // Praise or encouragement message
-    let message = document.getElementById("labMessage");
-    if (labGrade >= 75) {
-        message.innerText = "Great job! You passed the lab!";
-        message.classList.add("pass");
-        message.classList.remove("fail");
-    } else {
-        message.innerText = "Keep trying! You'll get there!";
-        message.classList.add("fail");
-        message.classList.remove("pass");
-    }
-}
-
+            // Praise or encouragement message
+            let message = document.getElementById("labMessage");
+            if (labGrade >= 75) {
+                message.innerText = "Great job! You passed. Keep up the hard work!";
+                message.classList.add("pass");
+                message.classList.remove("fail");
+            } else {
+                message.innerText = "Don't give up! Keep pushing, you can do it!";
+                message.classList.add("fail");
+                message.classList.remove("pass");
+            }
+        }
     </script>
 </body>
 </html>
