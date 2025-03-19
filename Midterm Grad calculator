@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,425 +6,247 @@
     <title>Grade Calculator</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(45deg, #f5f7fa, #c3cfe2);
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #000;
+            color: #fff;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 900px;
             padding: 20px;
+        }
+        .container {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             gap: 20px;
         }
-
-        h1 {
-            text-align: center;
-            font-size: 2em;
-            color: #333;
-            margin-bottom: 15px;
+        .panel {
+            background-color: #000;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            padding: 20px;
+            width: 48%;
         }
-
-        .section-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .section {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            flex: 1;
-            min-width: 300px;
-            max-width: 400px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
         h2 {
-            font-size: 1.5em;
             color: #4CAF50;
-            margin-bottom: 15px;
+            text-align: center;
         }
-
         label {
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 5px;
-            display: block;
+            margin-top: 10px;
         }
-
-        input, select {
+        input[type="text"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            background-color: #fafafa;
-            transition: border 0.3s;
-            box-sizing: border-box;
+            padding: 5px;
+            margin: 5px 0;
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
         }
-
-        input:focus, select:focus {
-            border-color: #4CAF50;
-            outline: none;
+        input[type="checkbox"] {
+            margin: 5px 0;
         }
-
         button {
-            width: 100%;
-            padding: 12px;
             background-color: #4CAF50;
             color: white;
+            padding: 10px;
             border: none;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
         }
-
         button:hover {
-            background-color: #45a049;
+            background-color: #388E3C;
         }
-
         .result {
-            text-align: center;
-            font-size: 1.2em;
-            color: #333;
+            margin-top: 10px;
             font-weight: bold;
         }
-
-        .result span {
-            color: #4CAF50;
-        }
-
-        .message {
-            font-size: 1.1em;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .pass {
-            color: #4CAF50;
-        }
-
-        .fail {
-            color: #f44336;
-        }
-
-        .computation {
-            font-size: 1em;
-            margin-top: 15px;
-            color: #555;
-            padding: 12px;
-            background-color: #f1f1f1;
-            border-radius: 8px;
-            line-height: 1.5;
-        }
-
-        .computation p {
-            margin: 4px 0;
-        }
-
-        /* Adjusted alignment for absence checklist */
-        .absence-checklist {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .absence-checklist label {
-            font-size: 14px;
-            color: #555;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .error {
-            color: #f44336;
-            font-size: 1em;
+        .computation-area {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: 1px solid #555;
             margin-top: 10px;
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .section-container {
-                flex-direction: column;
-                align-items: center;
-            }
+            white-space: pre-wrap;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Grade Calculator</h1>
 
-        <div class="section-container">
-            <!-- Lecture Form -->
-            <div class="section">
-                <h2>Lecture Prelim Grade</h2>
-                <form id="lectureForm">
-                    <label for="prelimExam">Prelim Exam:</label>
-                    <input type="number" id="prelimExam" max="100" placeholder="Prelim Exam Score (0-100)" required><br>
+<div class="container">
+    <div class="panel">
+        <h2>Lecture Prelim Grade</h2>
+        <label for="prelimExam">Prelim Exam:</label>
+        <input type="text" id="prelimExam">
+        <label for="essay">Essay:</label>
+        <input type="text" id="essay">
+        <label for="pvm">PVM:</label>
+        <input type="text" id="pvm">
+        <label for="javaBasics">Java Basics:</label>
+        <input type="text" id="javaBasics">
+        <label for="introJs">Intro to JS:</label>
+        <input type="text" id="introJs">
 
-                    <label for="essay">Essay:</label>
-                    <input type="number" id="essay" max="100" placeholder="Essay Score (0-100)" required><br>
+        <h3>Lecture Absences:</h3>
+        <label><input type="checkbox" class="lectureAbsence"> January 23, 2025</label>
+        <label><input type="checkbox" class="lectureAbsence"> January 30, 2025</label>
+        <label><input type="checkbox" class="lectureAbsence"> February 06, 2025</label>
+        <label><input type="checkbox" class="lectureAbsence"> February 13, 2025</label>
+        <label><input type="checkbox" class="lectureAbsence"> February 20, 2025</label>
 
-                    <label for="pvm">PVM (max 60):</label>
-                    <input type="number" id="pvm" max="60" placeholder="PVM Score (0-60)" required><br>
-
-                    <label for="javaBasics">Java Basics (max 40):</label>
-                    <input type="number" id="javaBasics" max="40" placeholder="Java Basics Score (0-40)" required><br>
-
-                    <label for="introJs">Intro to JS (max 40):</label>
-                    <input type="number" id="introJs" max="40" placeholder="Intro to JS Score (0-40)" required><br>
-
-                    <label>Lecture Absences:</label>
-                    <div id="lectureAbsences" class="absence-checklist">
-                        <label><input type="checkbox" value="January 21, 2025"> January 21, 2025</label>
-                        <label><input type="checkbox" value="January 28, 2025"> January 28, 2025</label>
-                        <label><input type="checkbox" value="February 04, 2025"> February 04, 2025</label>
-                        <label><input type="checkbox" value="February 11, 2025"> February 11, 2025</label>
-                        <label><input type="checkbox" value="February 18, 2025"> February 18, 2025</label>
-                    </div>
-
-                    <button type="button" onclick="calculateLectureGrade()">Calculate Lecture Grade</button>
-                </form>
-
-                <div class="result">
-                    Lecture Prelim Grade: <span id="lectureGrade">N/A</span>
-                </div>
-                <div id="lectureMessage" class="message"></div>
-                <div id="lectureComputation" class="computation"></div>
-                <div id="lectureError" class="error"></div>
-            </div>
-
-            <!-- Laboratory Form -->
-            <div class="section">
-                <h2>Laboratory Prelim Grade</h2>
-                <form id="labForm">
-                    <label for="java1">Java 1:</label>
-                    <input type="number" id="java1" max="100" placeholder="Java 1 Score (0-100)" required><br>
-
-                    <label for="java2">Java 2:</label>
-                    <input type="number" id="java2" max="100" placeholder="Java 2 Score (0-100)" required><br>
-
-                    <label for="js1">JS1:</label>
-                    <input type="number" id="js1" max="100" placeholder="JS1 Score (0-100)" required><br>
-
-                    <label for="js2">JS2:</label>
-                    <input type="number" id="js2" max="100" placeholder="JS2 Score (0-100)" required><br>
-
-                    <label for="mp1">MP1:</label>
-                    <input type="number" id="mp1" max="100" placeholder="MP1 Score (0-100)" required><br>
-
-                    <label for="mp2">MP2:</label>
-                    <input type="number" id="mp2" max="100" placeholder="MP2 Score (0-100)" required><br>
-
-                    <label for="mp3">MP3:</label>
-                    <input type="number" id="mp3" max="100" placeholder="MP3 Score (0-100)" required><br>
-
-                    <label for="mp3Docu">MP3 (Documentation):</label>
-                    <input type="number" id="mp3Docu" max="100" placeholder="MP3 Documentation Score (0-100)" required><br>
-
-                    <label>Lab Absences:</label>
-                    <div id="labAbsences" class="absence-checklist">
-                        <label><input type="checkbox" value="January 21, 2025"> January 21, 2025</label>
-                        <label><input type="checkbox" value="January 28, 2025"> January 28, 2025</label>
-                        <label><input type="checkbox" value="February 04, 2025"> February 04, 2025</label>
-                        <label><input type="checkbox" value="February 11, 2025"> February 11, 2025</label>
-                        <label><input type="checkbox" value="February 18, 2025"> February 18, 2025</label>
-                    </div>
-
-                    <button type="button" onclick="calculateLabGrade()">Calculate Lab Grade</button>
-                </form>
-
-                <div class="result">
-                    Laboratory Prelim Grade: <span id="labGrade">N/A</span>
-                </div>
-                <div id="labMessage" class="message"></div>
-                <div id="labComputation" class="computation"></div>
-                <div id="labError" class="error"></div>
-            </div>
-        </div>
+        <button onclick="calculateLectureGrade()">Calculate Lecture Grade</button>
+        <div class="result" id="lectureGrade">Lecture Prelim Grade: N/A</div>
+        <div class="result" id="lectureMessage"></div>
+        <div class="computation-area" id="lectureComputationArea"></div>
     </div>
 
-    <script>
-        // Function to check for invalid input
-        function checkInvalidInputs(values, maxValues) {
-            for (let i = 0; i < values.length; i++) {
-                if (parseFloat(values[i]) > maxValues[i]) {
-                    return true;
-                }
-            }
-            return false;
+    <div class="panel">
+        <h2>Laboratory Prelim Grade</h2>
+        <label for="java1">Java 1:</label>
+        <input type="text" id="java1">
+        <label for="java2">Java 2:</label>
+        <input type="text" id="java2">
+        <label for="js1">JS1:</label>
+        <input type="text" id="js1">
+        <label for="js2">JS2:</label>
+        <input type="text" id="js2">
+        <label for="mp1">MP1:</label>
+        <input type="text" id="mp1">
+        <label for="mp2">MP2:</label>
+        <input type="text" id="mp2">
+        <label for="mp3">MP3:</label>
+        <input type="text" id="mp3">
+        <label for="mp3Docu">MP3 (Documentation):</label>
+        <input type="text" id="mp3Docu">
+
+        <h3>Lab Absences:</h3>
+        <label><input type="checkbox" class="labAbsence"> January 21, 2025</label>
+        <label><input type="checkbox" class="labAbsence"> January 28, 2025</label>
+        <label><input type="checkbox" class="labAbsence"> February 04, 2025</label>
+        <label><input type="checkbox" class="labAbsence"> February 11, 2025</label>
+        <label><input type="checkbox" class="labAbsence"> February 18, 2025</label>
+
+        <button onclick="calculateLabGrade()">Calculate Lab Grade</button>
+        <div class="result" id="labGrade">Laboratory Prelim Grade: N/A</div>
+        <div class="result" id="labMessage"></div>
+        <div class="computation-area" id="labComputationArea"></div>
+    </div>
+</div>
+
+<script>
+    function calculateLectureGrade() {
+        const prelimExam = parseFloat(document.getElementById('prelimExam').value) || 0;
+        const essay = parseFloat(document.getElementById('essay').value) || 0;
+        const pvm = parseFloat(document.getElementById('pvm').value) || 0;
+        const javaBasics = parseFloat(document.getElementById('javaBasics').value) || 0;
+        const introJs = parseFloat(document.getElementById('introJs').value) || 0;
+
+        const absences = Array.from(document.querySelectorAll('.lectureAbsence')).filter(cb => cb.checked).length;
+
+        if (absences >= 4) {
+            document.getElementById('lectureGrade').innerText = "Lecture Prelim Grade: FAIL";
+            document.getElementById('lectureMessage').innerText = "Instant fail due to excessive absences.";
+            document.getElementById('lectureMessage').style.color = "red";
+            return;
         }
 
-        // Function to calculate the Lecture Prelim Grade
-        function calculateLectureGrade() {
-            let errorMsg = document.getElementById("lectureError");
-            errorMsg.innerHTML = ''; // Clear any previous error message
-
-            // Get inputs
-            let prelimExam = document.getElementById("prelimExam").value;
-            let essay = document.getElementById("essay").value;
-            let pvm = document.getElementById("pvm").value;
-            let javaBasics = document.getElementById("javaBasics").value;
-            let introJs = document.getElementById("introJs").value;
-
-            // Check for invalid inputs
-            if (checkInvalidInputs([prelimExam, essay, pvm, javaBasics, introJs], [100, 100, 60, 40, 40])) {
-                errorMsg.innerHTML = "Error: Some input values are too high. Please check the max limits.";
-                return;
-            }
-
-            // Get selected absences
-            let lectureAbsences = document.querySelectorAll("#lectureAbsences input:checked");
-            let absenceCount = lectureAbsences.length;
-
-            // Check if absences are 4 or more
-            if (absenceCount >= 4) {
-                document.getElementById("lectureGrade").innerText = "Fail";
-                document.getElementById("lectureMessage").innerText = "You failed due to excessive absences.";
-                document.getElementById("lectureMessage").classList.add("fail");
-                document.getElementById("lectureMessage").classList.remove("pass");
-                document.getElementById("lectureComputation").innerHTML = ""; // Clear computation
-                return; // Exit the function to prevent further calculations
-            }
-
-            // Proceed with the calculation if all inputs are valid
-            let prelimExamValue = parseFloat(prelimExam);
-            let essayValue = parseFloat(essay);
-            let pvmValue = Math.min(parseFloat(pvm), 60); // Max 60
-            let javaBasicsValue = Math.min(parseFloat(javaBasics), 40); // Max 40
-            let introJsValue = Math.min(parseFloat(introJs), 40); // Max 40
-
-            // Prelim Class Standing Calculation
-            let prelimQuizzes = (essayValue + pvmValue + javaBasicsValue + introJsValue) / 4;
-            let attendancePenalty = absenceCount * 10; // Subtract 10 points for each absence
-            let attendance = Math.max(100 - attendancePenalty, 0); // Ensure it doesn't go below 0
-
-            let prelimClassStanding = (prelimQuizzes * 0.6) + (attendance * 0.4);
-            let lectureGrade = (prelimExamValue * 0.6) + (prelimClassStanding * 0.4);
-
-            // Display result
-            document.getElementById("lectureGrade").innerText = lectureGrade.toFixed(2);
-
-            // Show computation breakdown
-            let computationText = `
-                <p><strong>Prelim Exam (60%):</strong> ${prelimExamValue} * 0.60 = ${(prelimExamValue * 0.6).toFixed(2)}</p>
-                <p><strong>Prelim Quizzes Average (60%):</strong> (${essayValue} + ${pvmValue} + ${javaBasicsValue} + ${introJsValue}) / 4 = ${prelimQuizzes.toFixed(2)} * 0.60 = ${(prelimQuizzes * 0.6).toFixed(2)}</p>
-                <p><strong>Attendance (40%):</strong> 100 - (${absenceCount} * 10) = ${attendance} * 0.40 = ${(attendance * 0.4).toFixed(2)}</p>
-                <p><strong>Prelim Class Standing (40%):</strong> ${prelimClassStanding.toFixed(2)}</p>
-                <p><strong>Final Lecture Grade:</strong> ${lectureGrade.toFixed(2)}</p>
-            `;
-            document.getElementById("lectureComputation").innerHTML = computationText;
-
-            // Display Praise or Encouragement message
-            let message = document.getElementById("lectureMessage");
-            if (lectureGrade >= 75) {
-                message.innerText = "Great job! You passed the lecture.";
-                message.classList.add("pass");
-                message.classList.remove("fail");
-            } else {
-                message.innerText = "Keep trying! You can do it!";
-                message.classList.add("fail");
-                message.classList.remove("pass");
-            }
+        if ([prelimExam, essay, pvm, javaBasics, introJs].some(score => score > 100)) {
+            alert("You can only put a number of 100 or lower.");
+            return;
         }
-        
-        // Function to calculate the Laboratory Prelim Grade
-        function calculateLabGrade() {
-            let errorMsg = document.getElementById("labError");
-            errorMsg.innerHTML = ''; // Clear any previous error message
 
-            // Get inputs
-            let java1 = document.getElementById("java1").value;
-            let java2 = document.getElementById("java2").value;
-            let js1 = document.getElementById("js1").value;
-            let js2 = document.getElementById("js2").value;
-            let mp1 = document.getElementById("mp1").value;
-            let mp2 = document.getElementById("mp2").value;
-            let mp3 = document.getElementById("mp3").value;
-            let mp3Docu = document.getElementById("mp3Docu").value;
+        const prelimQuizzes = (essay + pvm + javaBasics + introJs) / 4;
+        const attendancePenalty = absences * 10;
+        const attendance = Math.max(100 - attendancePenalty, 0);
+        const prelimClassStanding = (prelimQuizzes * 0.6) + (attendance * 0.4);
+        const lectureGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
 
-            // Check for invalid inputs
-            if (checkInvalidInputs([java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu], [100, 100, 100, 100, 100, 100, 100, 100])) {
-                errorMsg.innerHTML = "Error: Some input values are too high. Please check the max limits.";
-                return;
-            }
+        document.getElementById('lectureGrade').innerText = "Lecture Prelim Grade: " + lectureGrade.toFixed(2);
+        document.getElementById('lectureComputationArea').innerText = getLectureComputationText(prelimExam, essay, pvm, javaBasics, introJs, absences, prelimQuizzes, attendance, prelimClassStanding, lectureGrade);
 
-            // Get selected absences
-            let labAbsences = document.querySelectorAll("#labAbsences input:checked");
-            let absenceCount = labAbsences.length;
-
-            // Check if absences are 4 or more
-            if (absenceCount >= 4) {
-                document.getElementById("labGrade").innerText = "Fail";
-                document.getElementById("labMessage").innerText = "You failed due to excessive absences.";
-                document.getElementById("labMessage").classList.add("fail");
-                document.getElementById("labMessage").classList.remove("pass");
-                document.getElementById("labComputation").innerHTML = ""; // Clear computation
-                return; // Exit the function to prevent further calculations
-            }
-
-            // Proceed with the calculation if all inputs are valid
-            let java1Value = parseFloat(java1);
-            let java2Value = parseFloat(java2);
-            let js1Value = parseFloat(js1);
-            let js2Value = parseFloat(js2);
-            let mp1Value = parseFloat(mp1);
-            let mp2Value = parseFloat(mp2);
-            let mp3Value = parseFloat(mp3);
-            let mp3DocuValue = parseFloat(mp3Docu);
-
-            // Prelim Exam Calculation
-            let prelimExam = (java1Value * 0.20) + (java2Value * 0.30) + (js1Value * 0.20) + (js2Value * 0.30);
-            let labWork = (mp1Value + mp2Value + mp3Value + mp3DocuValue) / 4;
-            let attendancePenalty = absenceCount * 10;
-            let attendance = Math.max(100 - attendancePenalty, 0); // Ensure it doesn't go below 0
-
-            // Final Lab Grade Calculation
-            let labGrade = (prelimExam * 0.60) + (labWork * 0.60) + (attendance * 0.40);
-            
-            // Display the result
-            document.getElementById("labGrade").innerText = labGrade.toFixed(2);
-
-            // Show computation breakdown
-            let computationText = `
-                <p><strong>Prelim Exam (60%):</strong> (${java1Value} * 0.20) + (${java2Value} * 0.30) + (${js1Value} * 0.20) + (${js2Value} * 0.30) = ${prelimExam.toFixed(2)} * 0.60 = ${(prelimExam * 0.6).toFixed(2)}</p>
-                <p><strong>Lab Work (60%):</strong> (${mp1Value} + ${mp2Value} + ${mp3Value} + ${mp3DocuValue}) / 4 = ${labWork.toFixed(2)} * 0.60 = ${(labWork * 0.6).toFixed(2)}</p>
-                <p><strong>Attendance (40%):</strong> 100 - (${absenceCount} * 10) = ${attendance} * 0.40 = ${(attendance * 0.4).toFixed(2)}</p>
-                <p><strong>Final Lab Grade:</strong> ${labGrade.toFixed(2)}</p>
-            `;
-            document.getElementById("labComputation").innerHTML = computationText;
-
-            // Praise or encouragement message
-            let message = document.getElementById("labMessage");
-            if (labGrade >= 75) {
-                message.innerText = "Great job! You passed. Keep up the hard work!";
-                message.classList.add("pass");
-                message.classList.remove("fail");
-            } else {
-                message.innerText = "Don't give up! Keep pushing, you can do it!";
-                message.classList.add("fail");
-                message.classList.remove("pass");
-            }
+        if (lectureGrade >= 75) {
+            document.getElementById('lectureMessage').innerText = "Great job! You passed. Keep up the hard work!";
+            document.getElementById('lectureMessage').style.color = "#4CAF50"; // Green
+        } else {
+            document.getElementById('lectureMessage').innerText = "Don't give up! Keep pushing, you can do it!";
+            document.getElementById('lectureMessage').style.color = "red"; // Red
         }
-    </script>
+    }
+
+    function calculateLabGrade() {
+        const java1 = parseFloat(document.getElementById('java1').value) || 0;
+        const java2 = parseFloat(document.getElementById('java2').value) || 0;
+        const js1 = parseFloat(document.getElementById('js1').value) || 0;
+        const js2 = parseFloat(document.getElementById('js2').value) || 0;
+        const mp1 = parseFloat(document.getElementById('mp1').value) || 0;
+        const mp2 = parseFloat(document.getElementById('mp2').value) || 0;
+        const mp3 = parseFloat(document.getElementById('mp3').value) || 0;
+        const mp3Docu = parseFloat(document.getElementById('mp3Docu').value) || 0;
+
+        const absences = Array.from(document.querySelectorAll('.labAbsence')).filter(cb => cb.checked).length;
+
+        if (absences >= 4) {
+            document.getElementById('labGrade').innerText = "Laboratory Prelim Grade: FAIL";
+            document.getElementById('labMessage').innerText = "Instant fail due to excessive absences.";
+            document.getElementById('labMessage').style.color = "red";
+            return;
+        }
+
+        if ([java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu].some(score => score > 100)) {
+            alert("You can only put a number of 100 or lower.");
+            return;
+        }
+
+        const prelimExam = (java1 * 0.2) + (java2 * 0.3) + (js1 * 0.2) + (js2 * 0.3);
+        const labWork = (mp1 + mp2 + mp3 + mp3Docu) / 4;
+        const attendancePenalty = absences * 10;
+        const attendance = Math.max(100 - attendancePenalty, 0);
+        const prelimClassStanding = (labWork * 0.6) + (attendance * 0.4);
+        const labGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
+
+        document.getElementById('labGrade').innerText = "Laboratory Prelim Grade: " + labGrade.toFixed(2);
+        document.getElementById('labComputationArea').innerText = getLabComputationText(java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu, absences, prelimExam, labWork, attendance, prelimClassStanding, labGrade);
+
+        if (labGrade >= 75) {
+            document.getElementById('labMessage').innerText = "Nice job! You passed.";
+            document.getElementById('labMessage').style.color = "#4CAF50"; // Green
+        } else {
+            document.getElementById('labMessage').innerText = "Try harder, you can do it!";
+            document.getElementById('labMessage').style.color = "red"; // Red
+        }
+    }
+
+    function getLectureComputationText(prelimExam, essay, pvm, javaBasics, introJs, absences, prelimQuizzes, attendance, prelimClassStanding, lectureGrade) {
+        return `Prelim Exam (60%): ${prelimExam} * 0.6 = ${(prelimExam * 0.6).toFixed(2)}
+Essay (10%): ${essay} * 0.1 = ${(essay * 0.1).toFixed(2)}
+PVM (10%): ${pvm} * 0.1 = ${(pvm * 0.1).toFixed(2)}
+Java Basics (10%): ${javaBasics} * 0.1 = ${(javaBasics * 0.1).toFixed(2)}
+Intro to JS (10%): ${introJs} * 0.1 = ${(introJs * 0.1).toFixed(2)}
+
+Total Quizzes Grade: ${prelimQuizzes.toFixed(2)}
+Absences Penalty (10% per absence): ${absences} * 10 = ${absences * 10}
+Attendance Grade: ${attendance.toFixed(2)}
+Prelim Class Standing: ${prelimClassStanding.toFixed(2)}
+Lecture Grade: ${lectureGrade.toFixed(2)}`;
+    }
+
+    function getLabComputationText(java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu, absences, prelimExam, labWork, attendance, prelimClassStanding, labGrade) {
+        return `Java 1 (20%): ${java1} * 0.2 = ${(java1 * 0.2).toFixed(2)}
+Java 2 (30%): ${java2} * 0.3 = ${(java2 * 0.3).toFixed(2)}
+JS1 (20%): ${js1} * 0.2 = ${(js1 * 0.2).toFixed(2)}
+JS2 (30%): ${js2} * 0.3 = ${(js2 * 0.3).toFixed(2)}
+
+Prelim Exam Grade: ${prelimExam.toFixed(2)}
+MP1 (25%): ${mp1}
+MP2 (25%): ${mp2}
+MP3 (25%): ${mp3}
+MP3 Documentation (25%): ${mp3Docu}
+
+Lab Work Grade: ${labWork.toFixed(2)}
+Absences Penalty (10% per absence): ${absences} * 10 = ${absences * 10}
+Attendance Grade: ${attendance.toFixed(2)}
+Prelim Class Standing: ${prelimClassStanding.toFixed(2)}
+Lab Grade: ${labGrade.toFixed(2)}`;
+    }
+</script>
+
 </body>
 </html>
