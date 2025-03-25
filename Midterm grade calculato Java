@@ -132,9 +132,9 @@ public class GameEarningsAnalysis {
                           2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 
                           2016, 2017, 2018, 2019, 2020};
 
+        // Fill initial data in the dataset
         for (int year : allYears) {
-            double earnings = averageEarnings.getOrDefault(year, 0.0);
-            dataset.addValue(earnings, "Average Earnings", String.valueOf(year));
+            dataset.addValue(0.0, "Average Earnings", String.valueOf(year)); // Start with 0.0 for animation effect
         }
 
         JFreeChart barChart = ChartFactory.createBarChart(
@@ -157,6 +157,27 @@ public class GameEarningsAnalysis {
         ChartPanel chartPanel = new ChartPanel(barChart);
         chartPanel.setPreferredSize(new Dimension(800, 600));
         panel.add(chartPanel, BorderLayout.CENTER);
+
+        // Create an ActionListener to animate the bar chart
+        ActionListener animateBars = new ActionListener() {
+            private int currentYearIndex = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (currentYearIndex < allYears.length) {
+                    int year = allYears[currentYearIndex];
+                    double earnings = averageEarnings.getOrDefault(year, 0.0);
+                    dataset.setValue(earnings, "Average Earnings", String.valueOf(year));
+                    currentYearIndex++;
+                } else {
+                    ((Timer) e.getSource()).stop(); // Stop the animation once all data is shown
+                }
+            }
+        };
+
+        // Create a Timer to update the dataset every 100ms for animation effect
+        Timer timer = new Timer(100, animateBars);
+        timer.start(); // Start the animation
 
         JButton exportButton = new JButton("Export Average Earnings to CSV");
         exportButton.addActionListener(new ActionListener() {
