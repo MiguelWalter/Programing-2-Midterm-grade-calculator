@@ -214,7 +214,7 @@
             }
         }
 
-        // Generate and display the bar chart using Chart.js
+        // Generate and display the bar chart using Chart.js with animation
         function generateBarChart(averageEarnings) {
             const years = Object.keys(averageEarnings).sort();
             const earnings = years.map(year => averageEarnings[year]);
@@ -233,6 +233,7 @@
                     }]
                 },
                 options: {
+                    responsive: true,
                     scales: {
                         x: {
                             title: {
@@ -257,6 +258,13 @@
                                 // Set the step size for the Y-axis
                                 stepSize: 50000
                             }
+                        }
+                    },
+                    animation: {
+                        duration: 2000, // Duration of animation (in ms) changed to 2000ms (2 seconds)
+                        easing: 'easeInOutBounce', // Easing function (smooth bounce effect)
+                        onComplete: function() {
+                            console.log('Animation complete!');
                         }
                     }
                 }
