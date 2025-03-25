@@ -3,250 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade Calculator</title>
+    <title>Game Earnings Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #000;
-            color: #fff;
+        /* General Reset */
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
             padding: 20px;
         }
-        .container {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-        .panel {
-            background-color: #000;
-            border: 2px solid #4CAF50;
-            border-radius: 5px;
-            padding: 20px;
-            width: 48%;
-        }
-        h2 {
-            color: #4CAF50;
+
+        h1 {
             text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
         }
-        label {
-            margin-top: 10px;
+
+        h2 {
+            color: #2c3e50;
+            margin-top: 20px;
         }
-        input[type="text"] {
-            width: 100%;
-            padding: 5px;
-            margin: 5px 0;
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #555;
-        }
-        input[type="checkbox"] {
-            margin: 5px 0;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
+
+        /* File Input Styling */
+        input[type="file"] {
+            display: block;
+            margin: 20px auto;
             padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="file"]:hover {
+            border-color: #3498db;
+        }
+
+        /* Export Button Styling */
+        #exportButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
         }
-        button:hover {
-            background-color: #388E3C;
+
+        #exportButton:hover {
+            background-color: #2980b9;
         }
-        .result {
-            margin-top: 10px;
-            font-weight: bold;
+
+        /* Summary Styling */
+        #summary {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
         }
-        .computation-area {
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            border: 1px solid #555;
-            margin-top: 10px;
-            white-space: pre-wrap;
+
+        #summary strong {
+            font-size: 18px;
+            color: #3498db;
+        }
+
+        /* Chart Styling */
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            canvas {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+            }
+
+            #summary {
+                padding: 15px;
+            }
+
+            h1, h2 {
+                font-size: 1.2em;
+            }
+
+            input[type="file"] {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            #exportButton {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="panel">
-        <h2>Lecture Prelim Grade</h2>
-        <label for="prelimExam">Prelim Exam:</label>
-        <input type="text" id="prelimExam">
-        <label for="essay">Essay:</label>
-        <input type="text" id="essay">
-        <label for="pvm">PVM:</label>
-        <input type="text" id="pvm">
-        <label for="javaBasics">Java Basics:</label>
-        <input type="text" id="javaBasics">
-        <label for="introJs">Intro to JS:</label>
-        <input type="text" id="introJs">
+    <h1>Game Earnings Analysis</h1>
 
-        <h3>Lecture Absences:</h3>
-        <label><input type="checkbox" class="lectureAbsence"> January 23, 2025</label>
-        <label><input type="checkbox" class="lectureAbsence"> January 30, 2025</label>
-        <label><input type="checkbox" class="lectureAbsence"> February 06, 2025</label>
-        <label><input type="checkbox" class="lectureAbsence"> February 13, 2025</label>
-        <label><input type="checkbox" class="lectureAbsence"> February 20, 2025</label>
+    <!-- File input to select CSV file -->
+    <input type="file" id="csvFileInput" accept=".csv" />
 
-        <button onclick="calculateLectureGrade()">Calculate Lecture Grade</button>
-        <div class="result" id="lectureGrade">Lecture Prelim Grade: N/A</div>
-        <div class="result" id="lectureMessage"></div>
-        <div class="computation-area" id="lectureComputationArea"></div>
-    </div>
+    <h2>Average Earnings by Release Year</h2>
+    <div id="summary"></div>
 
-    <div class="panel">
-        <h2>Laboratory Prelim Grade</h2>
-        <label for="java1">Java 1:</label>
-        <input type="text" id="java1">
-        <label for="java2">Java 2:</label>
-        <input type="text" id="java2">
-        <label for="js1">JS1:</label>
-        <input type="text" id="js1">
-        <label for="js2">JS2:</label>
-        <input type="text" id="js2">
-        <label for="mp1">MP1:</label>
-        <input type="text" id="mp1">
-        <label for="mp2">MP2:</label>
-        <input type="text" id="mp2">
-        <label for="mp3">MP3:</label>
-        <input type="text" id="mp3">
-        <label for="mp3Docu">MP3 (Documentation):</label>
-        <input type="text" id="mp3Docu">
+    <h2>Bar Chart</h2>
+    <canvas id="earningsChart" width="800" height="600"></canvas>
 
-        <h3>Lab Absences:</h3>
-        <label><input type="checkbox" class="labAbsence"> January 21, 2025</label>
-        <label><input type="checkbox" class="labAbsence"> January 28, 2025</label>
-        <label><input type="checkbox" class="labAbsence"> February 04, 2025</label>
-        <label><input type="checkbox" class="labAbsence"> February 11, 2025</label>
-        <label><input type="checkbox" class="labAbsence"> February 18, 2025</label>
+    <!-- Export Button -->
+    <button id="exportButton" style="display: none;">Export to CSV</button>
 
-        <button onclick="calculateLabGrade()">Calculate Lab Grade</button>
-        <div class="result" id="labGrade">Laboratory Prelim Grade: N/A</div>
-        <div class="result" id="labMessage"></div>
-        <div class="computation-area" id="labComputationArea"></div>
-    </div>
-</div>
+    <script>
+        // Handle CSV file reading and processing
+        document.getElementById('csvFileInput').addEventListener('change', handleFileSelect, false);
 
-<script>
-    function calculateLectureGrade() {
-        const prelimExam = parseFloat(document.getElementById('prelimExam').value) || 0;
-        const essay = parseFloat(document.getElementById('essay').value) || 0;
-        const pvm = parseFloat(document.getElementById('pvm').value) || 0;
-        const javaBasics = parseFloat(document.getElementById('javaBasics').value) || 0;
-        const introJs = parseFloat(document.getElementById('introJs').value) || 0;
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file && file.name.endsWith('.csv')) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const csvData = e.target.result;
+                    const gameDataList = readCSV(csvData);
+                    const earningsByYear = processData(gameDataList);
+                    const averageEarnings = calculateAverageEarnings(earningsByYear);
 
-        const absences = Array.from(document.querySelectorAll('.lectureAbsence')).filter(cb => cb.checked).length;
+                    printSummary(averageEarnings);
+                    generateBarChart(averageEarnings);
 
-        if (absences >= 4) {
-            document.getElementById('lectureGrade').innerText = "Lecture Prelim Grade: FAIL";
-            document.getElementById('lectureMessage').innerText = "Instant fail due to excessive absences.";
-            document.getElementById('lectureMessage').style.color = "red";
-            return;
+                    // Show export button once the data is loaded
+                    document.getElementById('exportButton').style.display = 'block';
+                    
+                    // Store the data for export
+                    window.averageEarningsForExport = averageEarnings;
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please select a valid CSV file.');
+            }
         }
 
-        if ([prelimExam, essay, pvm, javaBasics, introJs].some(score => score > 100)) {
-            alert("You can only put a number of 100 or lower.");
-            return;
+        // Parse CSV data into an array of GameData objects
+        function readCSV(csvData) {
+            const gameDataList = [];
+            const rows = csvData.split('\n');
+            rows.slice(1).forEach(row => {
+                const columns = row.split(',');
+                if (columns.length >= 2) {
+                    const totalMoney = parseFloat(columns[columns.length - 2].trim());
+                    const releaseYear = parseInt(columns[columns.length - 1].trim());
+                    if (!isNaN(totalMoney) && !isNaN(releaseYear)) {
+                        gameDataList.push({ releaseYear, totalMoney });
+                    }
+                }
+            });
+            return gameDataList;
         }
 
-        const prelimQuizzes = (essay + pvm + javaBasics + introJs) / 4;
-        const attendancePenalty = absences * 10;
-        const attendance = Math.max(100 - attendancePenalty, 0);
-        const prelimClassStanding = (prelimQuizzes * 0.6) + (attendance * 0.4);
-        const lectureGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
-
-        document.getElementById('lectureGrade').innerText = "Lecture Prelim Grade: " + lectureGrade.toFixed(2);
-        document.getElementById('lectureComputationArea').innerText = getLectureComputationText(prelimExam, essay, pvm, javaBasics, introJs, absences, prelimQuizzes, attendance, prelimClassStanding, lectureGrade);
-
-        if (lectureGrade >= 75) {
-            document.getElementById('lectureMessage').innerText = "Great job! You passed. Keep up the hard work!";
-            document.getElementById('lectureMessage').style.color = "#4CAF50"; // Green
-        } else {
-            document.getElementById('lectureMessage').innerText = "Don't give up! Keep pushing, you can do it!";
-            document.getElementById('lectureMessage').style.color = "red"; // Red
-        }
-    }
-
-    function calculateLabGrade() {
-        const java1 = parseFloat(document.getElementById('java1').value) || 0;
-        const java2 = parseFloat(document.getElementById('java2').value) || 0;
-        const js1 = parseFloat(document.getElementById('js1').value) || 0;
-        const js2 = parseFloat(document.getElementById('js2').value) || 0;
-        const mp1 = parseFloat(document.getElementById('mp1').value) || 0;
-        const mp2 = parseFloat(document.getElementById('mp2').value) || 0;
-        const mp3 = parseFloat(document.getElementById('mp3').value) || 0;
-        const mp3Docu = parseFloat(document.getElementById('mp3Docu').value) || 0;
-
-        const absences = Array.from(document.querySelectorAll('.labAbsence')).filter(cb => cb.checked).length;
-
-        if (absences >= 4) {
-            document.getElementById('labGrade').innerText = "Laboratory Prelim Grade: FAIL";
-            document.getElementById('labMessage').innerText = "Instant fail due to excessive absences.";
-            document.getElementById('labMessage').style.color = "red";
-            return;
+        // Group earnings by release year
+        function processData(gameDataList) {
+            const earningsByYear = {};
+            gameDataList.forEach(game => {
+                if (!earningsByYear[game.releaseYear]) {
+                    earningsByYear[game.releaseYear] = [];
+                }
+                earningsByYear[game.releaseYear].push(game.totalMoney);
+            });
+            return earningsByYear;
         }
 
-        if ([java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu].some(score => score > 100)) {
-            alert("You can only put a number of 100 or lower.");
-            return;
+        // Calculate average earnings per year
+        function calculateAverageEarnings(earningsByYear) {
+            const averageEarnings = {};
+            for (const year in earningsByYear) {
+                const earnings = earningsByYear[year];
+                const sum = earnings.reduce((acc, curr) => acc + curr, 0);
+                averageEarnings[year] = sum / earnings.length;
+            }
+            return averageEarnings;
         }
 
-        const prelimExam = (java1 * 0.2) + (java2 * 0.3) + (js1 * 0.2) + (js2 * 0.3);
-        const labWork = (mp1 + mp2 + mp3 + mp3Docu) / 4;
-        const attendancePenalty = absences * 10;
-        const attendance = Math.max(100 - attendancePenalty, 0);
-        const prelimClassStanding = (labWork * 0.6) + (attendance * 0.4);
-        const labGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
-
-        document.getElementById('labGrade').innerText = "Laboratory Prelim Grade: " + labGrade.toFixed(2);
-        document.getElementById('labComputationArea').innerText = getLabComputationText(java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu, absences, prelimExam, labWork, attendance, prelimClassStanding, labGrade);
-
-        if (labGrade >= 75) {
-            document.getElementById('labMessage').innerText = "Nice job! You passed.";
-            document.getElementById('labMessage').style.color = "#4CAF50"; // Green
-        } else {
-            document.getElementById('labMessage').innerText = "Try harder, you can do it!";
-            document.getElementById('labMessage').style.color = "red"; // Red
+        // Print the summary of average earnings
+        function printSummary(averageEarnings) {
+            const summaryDiv = document.getElementById('summary');
+            summaryDiv.innerHTML = '<strong>Average Earnings by Release Year:</strong><br>';
+            for (const year in averageEarnings) {
+                summaryDiv.innerHTML += `Year: ${year}, Average Earnings: $${averageEarnings[year].toFixed(2)}<br>`;
+            }
         }
-    }
 
-    function getLectureComputationText(prelimExam, essay, pvm, javaBasics, introJs, absences, prelimQuizzes, attendance, prelimClassStanding, lectureGrade) {
-        return `Prelim Exam (60%): ${prelimExam} * 0.6 = ${(prelimExam * 0.6).toFixed(2)}
-Essay (10%): ${essay} * 0.1 = ${(essay * 0.1).toFixed(2)}
-PVM (10%): ${pvm} * 0.1 = ${(pvm * 0.1).toFixed(2)}
-Java Basics (10%): ${javaBasics} * 0.1 = ${(javaBasics * 0.1).toFixed(2)}
-Intro to JS (10%): ${introJs} * 0.1 = ${(introJs * 0.1).toFixed(2)}
+        // Generate and display the bar chart using Chart.js
+        function generateBarChart(averageEarnings) {
+            const years = Object.keys(averageEarnings).sort();
+            const earnings = years.map(year => averageEarnings[year]);
 
-Total Quizzes Grade: ${prelimQuizzes.toFixed(2)}
-Absences Penalty (10% per absence): ${absences} * 10 = ${absences * 10}
-Attendance Grade: ${attendance.toFixed(2)}
-Prelim Class Standing: ${prelimClassStanding.toFixed(2)}
-Lecture Grade: ${lectureGrade.toFixed(2)}`;
-    }
+            const ctx = document.getElementById('earningsChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Average Earnings',
+                        data: earnings,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Release Year'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Average Earnings ($)'
+                            },
+                            ticks: {
+                                // Custom tick formatting
+                                callback: function(value) {
+                                    // Convert to 'k' format
+                                    if (value >= 1000) {
+                                        return '$' + (value / 1000).toFixed(0) + 'k';
+                                    }
+                                    return '$' + value;
+                                },
+                                // Set the step size for the Y-axis
+                                stepSize: 50000
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
-    function getLabComputationText(java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu, absences, prelimExam, labWork, attendance, prelimClassStanding, labGrade) {
-        return `Java 1 (20%): ${java1} * 0.2 = ${(java1 * 0.2).toFixed(2)}
-Java 2 (30%): ${java2} * 0.3 = ${(java2 * 0.3).toFixed(2)}
-JS1 (20%): ${js1} * 0.2 = ${(js1 * 0.2).toFixed(2)}
-JS2 (30%): ${js2} * 0.3 = ${(js2 * 0.3).toFixed(2)}
+        // Function to export the earnings data to CSV
+        document.getElementById('exportButton').addEventListener('click', function() {
+            const earningsForExport = window.averageEarningsForExport;
+            let csvContent = "Year,Average Earnings\n";
 
-Prelim Exam Grade: ${prelimExam.toFixed(2)}
-MP1 (25%): ${mp1}
-MP2 (25%): ${mp2}
-MP3 (25%): ${mp3}
-MP3 Documentation (25%): ${mp3Docu}
+            for (const year in earningsForExport) {
+                csvContent += `${year},${earningsForExport[year].toFixed(2)}\n`;
+            }
 
-Lab Work Grade: ${labWork.toFixed(2)}
-Absences Penalty (10% per absence): ${absences} * 10 = ${absences * 10}
-Attendance Grade: ${attendance.toFixed(2)}
-Prelim Class Standing: ${prelimClassStanding.toFixed(2)}
-Lab Grade: ${labGrade.toFixed(2)}`;
-    }
-</script>
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'game_earnings.csv');
+            link.click();
+        });
+    </script>
 
 </body>
 </html>
