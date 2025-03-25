@@ -1,368 +1,202 @@
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.ArrayList; // Import ArrayList explicitly
+import java.util.Arrays;
+import java.util.HashMap; // Import HashMap explicitly
+import java.util.List; // Import List explicitly
+import java.util.Map; // Import Map explicitly
+import java.util.TreeSet; // Import TreeSet for sorting
 
-public class GradeCalculator extends JFrame {
+public class GameEarningsAnalysis {
 
-    private JTextField prelimExamField, essayField, pvmField, javaBasicsField, introJsField;
-    private JTextField java1Field, java2Field, js1Field, js2Field, mp1Field, mp2Field, mp3Field, mp3DocuField;
-    private JLabel lectureGradeLabel, labGradeLabel, lectureMessageLabel, labMessageLabel;
-    private JTextArea lectureComputationArea, labComputationArea;
-    private JCheckBox[] lectureAbsenceCheckboxes;
-    private JCheckBox[] labAbsenceCheckboxes;
-
-    public GradeCalculator() {
-        setTitle("Grade Calculator");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        setSize(800, 600);
-        setLocationRelativeTo(null); // Center the window
-
-        // Main container with black background
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(1, 2, 20, 10)); // Increase spacing between panels
-        mainPanel.setBackground(Color.BLACK); // Set background to black
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        // Lecture Panel
-        JPanel lecturePanel = createLecturePanel();
-        mainPanel.add(lecturePanel);
-
-        // Laboratory Panel
-        JPanel labPanel = createLabPanel();
-        mainPanel.add(labPanel);
-
-        // Add main panel to frame
-        add(mainPanel);
-        setVisible(true);
-    }
-
-    private JPanel createLecturePanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(Color.BLACK); // Set panel background to black
-        panel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(new Color(76, 175, 80), 2),
-                "Lecture Prelim Grade",
-                TitledBorder.DEFAULT_JUSTIFICATION,
-                TitledBorder.DEFAULT_POSITION,
-                new Font("Segoe UI", Font.BOLD, 16),
-                new Color(76, 175, 80)
-        ));
-
-        // Input fields with light text color
-        prelimExamField = createInputField(panel, "Prelim Exam:");
-        essayField = createInputField(panel, "Essay:");
-        pvmField = createInputField(panel, "PVM:");
-        javaBasicsField = createInputField(panel, "Java Basics:");
-        introJsField = createInputField(panel, "Intro to JS:");
-
-        // Lecture Absences checkboxes
-        JLabel lectureAbsencesLabel = new JLabel("Lecture Absences:");
-        lectureAbsencesLabel.setForeground(Color.WHITE);
-        panel.add(lectureAbsencesLabel);
-
-        String[] lectureDates = {"January 23, 2025", "January 30, 2025", "February 06, 2025", "February 13, 2025", "February 20, 2025"};
-        lectureAbsenceCheckboxes = new JCheckBox[5];
-        for (int i = 0; i < 5; i++) {
-            lectureAbsenceCheckboxes[i] = new JCheckBox(lectureDates[i]);
-            lectureAbsenceCheckboxes[i].setBackground(Color.BLACK);
-            lectureAbsenceCheckboxes[i].setForeground(Color.WHITE);
-            panel.add(lectureAbsenceCheckboxes[i]);
-        }
-
-        // Calculate button
-        JButton calcLectureGradeButton = new JButton("Calculate Lecture Grade");
-        styleButton(calcLectureGradeButton);
-        calcLectureGradeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                calculateLectureGrade();
-            }
-        });
-        panel.add(calcLectureGradeButton);
-
-        // Result labels with light color for text
-        lectureGradeLabel = new JLabel("Lecture Prelim Grade: N/A");
-        lectureGradeLabel.setForeground(Color.WHITE);
-        lectureMessageLabel = new JLabel("");
-        lectureMessageLabel.setForeground(Color.WHITE);
-        lectureComputationArea = new JTextArea(5, 20);
-        lectureComputationArea.setEditable(false);
-        lectureComputationArea.setBackground(Color.BLACK);
-        lectureComputationArea.setForeground(Color.WHITE);
-        lectureComputationArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        panel.add(lectureGradeLabel);
-        panel.add(lectureMessageLabel);
-        panel.add(new JScrollPane(lectureComputationArea));
-
-        return panel;
-    }
-
-    private JPanel createLabPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(Color.BLACK); // Set panel background to black
-        panel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(new Color(76, 175, 80), 2),
-                "Laboratory Prelim Grade",
-                TitledBorder.DEFAULT_JUSTIFICATION,
-                TitledBorder.DEFAULT_POSITION,
-                new Font("Segoe UI", Font.BOLD, 16),
-                new Color(76, 175, 80)
-        ));
-
-        // Input fields with light text color
-        java1Field = createInputField(panel, "Java 1:");
-        java2Field = createInputField(panel, "Java 2:");
-        js1Field = createInputField(panel, "JS1:");
-        js2Field = createInputField(panel, "JS2:");
-        mp1Field = createInputField(panel, "MP1:");
-        mp2Field = createInputField(panel, "MP2:");
-        mp3Field = createInputField(panel, "MP3:");
-        mp3DocuField = createInputField(panel, "MP3 (Documentation):");
-
-        // Lab Absences checkboxes
-        JLabel labAbsencesLabel = new JLabel("Lab Absences:");
-        labAbsencesLabel.setForeground(Color.WHITE);
-        panel.add(labAbsencesLabel);
-
-        String[] labDates = {"January 21, 2025", "January 28, 2025", "February 04, 2025", "February 11, 2025", "February 18, 2025"};
-        labAbsenceCheckboxes = new JCheckBox[5];
-        for (int i = 0; i < 5; i++) {
-            labAbsenceCheckboxes[i] = new JCheckBox(labDates[i]);
-            labAbsenceCheckboxes[i].setBackground(Color.BLACK);
-            labAbsenceCheckboxes[i].setForeground(Color.WHITE);
-            panel.add(labAbsenceCheckboxes[i]);
-        }
-
-        // Calculate button
-        JButton calcLabGradeButton = new JButton("Calculate Lab Grade");
-        styleButton(calcLabGradeButton);
-        calcLabGradeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                calculateLabGrade();
-            }
-        });
-        panel.add(calcLabGradeButton);
-
-        // Result labels with light color for text
-        labGradeLabel = new JLabel("Laboratory Prelim Grade: N/A");
-        labGradeLabel.setForeground(Color.WHITE);
-        labMessageLabel = new JLabel("");
-        labMessageLabel.setForeground(Color.WHITE);
-        labComputationArea = new JTextArea(5, 20);
-        labComputationArea.setEditable(false);
-        labComputationArea.setBackground(Color.BLACK);
-        labComputationArea.setForeground(Color.WHITE);
-        labComputationArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        panel.add(labGradeLabel);
-        panel.add(labMessageLabel);
-        panel.add(new JScrollPane(labComputationArea));
-
-        return panel;
-    }
-
-    private JTextField createInputField(JPanel panel, String labelText) {
-        JLabel label = new JLabel(labelText);
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Use Segoe UI for modern look
-        label.setForeground(Color.WHITE); // Set label color to white
-        JTextField textField = new JTextField(5); // Set the number of columns to 5 for a shorter width
-        textField.setMaximumSize(new Dimension(100, textField.getPreferredSize().height)); // Set a maximum width
-        textField.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Modern font for text field
-        textField.setForeground(Color.WHITE); // Set text color to white
-        textField.setBackground(Color.DARK_GRAY); // Set text field background to dark gray
-        textField.setCaretColor(Color.GREEN); // Set caret color (blinking cursor) to green
-        panel.add(label);
-        panel.add(textField);
-        return textField;
-    }
-
-    private void styleButton(JButton button) {
-        button.setBackground(new Color(76, 175, 80));
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setPreferredSize(new Dimension(200, 40)); // Set fixed size for buttons
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(56, 142, 60)); // Darker green on hover
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(76, 175, 80)); // Original color
-            }
-        });
-    }
-
-    private void calculateLectureGrade() {
-        try {
-            int absences = 0;
-            for (JCheckBox checkBox : lectureAbsenceCheckboxes) {
-                if (checkBox.isSelected()) {
-                    absences++;
-                }
-            }
-
-            // If 4 or more absences are selected, it's an instant fail
-            if (absences >= 4) {
-                lectureGradeLabel.setText("Lecture Prelim Grade: FAIL");
-                lectureMessageLabel.setText("Instant fail due to excessive absences.");
-                lectureMessageLabel.setForeground(Color.RED);
-                return;
-            }
-
-            double prelimExam = Double.parseDouble(prelimExamField.getText());
-            double essay = Double.parseDouble(essayField.getText());
-            double pvm = Double.parseDouble(pvmField.getText());
-            double javaBasics = Double.parseDouble(javaBasicsField.getText());
-            double introJs = Double.parseDouble(introJsField.getText());
-
-            // Validation for maximum score
-            if (prelimExam > 100 || essay > 100 || pvm > 100 || javaBasics > 100 || introJs > 100) {
-                JOptionPane.showMessageDialog(this, "You can only put a number of 100 or lower.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            double prelimQuizzes = (essay + pvm + javaBasics + introJs) / 4;
-            double attendancePenalty = absences * 10;
-            double attendance = Math.max(100 - attendancePenalty, 0);
-
-            double prelimClassStanding = (prelimQuizzes * 0.6) + (attendance * 0.4);
-            double lectureGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
-
-            lectureGradeLabel.setText("Lecture Prelim Grade: " + String.format("%.2f", lectureGrade));
-            lectureComputationArea.setText(getLectureComputationText(prelimExam, essay, pvm, javaBasics, introJs, absences, prelimQuizzes, attendance, prelimClassStanding, lectureGrade));
-
-            if (lectureGrade >= 75) {
-                lectureMessageLabel.setText("Great job! You passed. Keep up the hard work!");
-                lectureMessageLabel.setForeground(new Color(76, 175, 80)); // Green
-            } else {
-                lectureMessageLabel.setText("Don't give up! Keep pushing, you can do it!");
-                lectureMessageLabel.setForeground(Color.RED); // Red
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter valid numbers in all fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void calculateLabGrade() {
-        try {
-            int absences = 0;
-            for (JCheckBox checkBox : labAbsenceCheckboxes) {
-                if (checkBox.isSelected()) {
-                    absences++;
-                }
-            }
-
-            // If 4 or more absences are selected, it's an instant fail
-            if (absences >= 4) {
-                labGradeLabel.setText("Laboratory Prelim Grade: FAIL");
-                labMessageLabel.setText("Instant fail due to excessive absences.");
-                labMessageLabel.setForeground(Color.RED);
-                return;
-            }
-
-            double java1 = Double.parseDouble(java1Field.getText());
-            double java2 = Double.parseDouble(java2Field.getText());
-            double js1 = Double.parseDouble(js1Field.getText());
-            double js2 = Double.parseDouble(js2Field.getText());
-            double mp1 = Double.parseDouble(mp1Field.getText());
-            double mp2 = Double.parseDouble(mp2Field.getText());
-            double mp3 = Double.parseDouble(mp3Field.getText());
-            double mp3Docu = Double.parseDouble(mp3DocuField.getText());
-
-            // Validation for maximum score
-            if (java1 > 100 || java2 > 100 || js1 > 100 || js2 > 100 || mp1 > 100 || mp2 > 100 || mp3 > 100 || mp3Docu > 100) {
-                JOptionPane.showMessageDialog(this, "You can only put a number of 100 or lower.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            double prelimExam = (java1 * 0.2) + (java2 * 0.3) + (js1 * 0.2) + (js2 * 0.3);
-            double labWork = (mp1 + mp2 + mp3 + mp3Docu) / 4;
-            double attendancePenalty = absences * 10;
-            double attendance = Math.max(100 - attendancePenalty, 0);
-
-            double prelimClassStanding = (labWork * 0.6) + (attendance * 0.4);
-            double labGrade = (prelimExam * 0.6) + (prelimClassStanding * 0.4);
-
-            labGradeLabel.setText("Laboratory Prelim Grade: " + String.format("%.2f", labGrade));
-            labComputationArea.setText(getLabComputationText(java1, java2, js1, js2, mp1, mp2, mp3, mp3Docu, absences, prelimExam, labWork, attendance, prelimClassStanding, labGrade));
-
-            if (labGrade >= 75) {
-                labMessageLabel.setText("Nice job! You passed.");
-                labMessageLabel.setForeground(new Color(76, 175, 80)); // Green
-            } else {
-                labMessageLabel.setText("Try harder, you can do it!");
-                labMessageLabel.setForeground(Color.RED); // Red
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter valid numbers in all fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private String getLectureComputationText(double prelimExam, double essay, double pvm, double javaBasics, double introJs, int absences, double prelimQuizzes, double attendance, double prelimClassStanding, double lectureGrade) {
-        return String.format(
-                "Prelim Exam (60%%): %.2f * 0.6 = %.2f\n" +
-                        "Essay (10%%): %.2f * 0.1 = %.2f\n" +
-                        "PVM (10%%): %.2f * 0.1 = %.2f\n" +
-                        "Java Basics (10%%): %.2f * 0.1 = %.2f\n" +
-                        "Intro to JS (10%%): %.2f * 0.1 = %.2f\n\n" +
-                        "Total Quizzes Grade: %.2f\n" +
-                        "Absences Penalty (10%% per absence): %d * 10 = %.2f\n" +
-                        "Attendance Grade: %.2f\n" +
-                        "Prelim Class Standing: %.2f\n" +
-                        "Lecture Grade: %.2f",
-                prelimExam, prelimExam * 0.6,
-                essay, essay * 0.1,
-                pvm, pvm * 0.1,
-                javaBasics, javaBasics * 0.1,
-                introJs, introJs * 0.1,
-                prelimQuizzes,
-                absences, absences * 10.0,
-                attendance,
-                prelimClassStanding,
-                lectureGrade
-        );
-    }
-
-    private String getLabComputationText(double java1, double java2, double js1, double js2, double mp1, double mp2, double mp3, double mp3Docu, int absences, double prelimExam, double labWork, double attendance, double prelimClassStanding, double labGrade) {
-        return String.format(
-                "Java 1 (20%%): %.2f * 0.2 = %.2f\n" +
-                        "Java 2 (30%%): %.2f * 0.3 = %.2f\n" +
-                        "JS1 (20%%): %.2f * 0.2 = %.2f\n" +
-                        "JS2 (30%%): %.2f * 0.3 = %.2f\n\n" +
-                        "Prelim Exam Grade: %.2f\n" +
-                        "MP1 (25%%): %.2f\n" +
-                        "MP2 (25%%): %.2f\n" +
-                        "MP3 (25%%): %.2f\n" +
-                        "MP3 Documentation (25%%): %.2f\n\n" +
-                        "Lab Work Grade: %.2f\n" +
-                        "Absences Penalty (10%% per absence): %d * 10 = %.2f\n" +
-                        "Attendance Grade: %.2f\n" +
-                        "Prelim Class Standing: %.2f\n" +
-                        "Lab Grade: %.2f",
-                java1, java1 * 0.2,
-                java2, java2 * 0.3,
-                js1, js1 * 0.2,
-                js2, js2 * 0.3,
-                prelimExam,
-                mp1, mp2, mp3, mp3Docu,
-                labWork,
-                absences, absences * 10.0,
-                attendance,
-                prelimClassStanding,
-                labGrade
-        );
-    }
+    private static Map<Integer, Double> averageEarnings; // Store average earnings for export
 
     public static void main(String[] args) {
-        new GradeCalculator();
+        // Open file chooser to select the CSV file
+        String csvFile = selectFile();
+        if (csvFile == null) {
+            System.out.println("No file selected. Exiting program.");
+            return;
+        }
+
+        // Process the selected file
+        List<GameData> gameDataList = readCSV(csvFile);
+        Map<Integer, List<Double>> earningsByYear = processData(gameDataList);
+        averageEarnings = calculateAverageEarnings(earningsByYear); // Store for later use
+
+        // Print summary of the average earnings by year
+        printSummary(averageEarnings);
+
+        // Generate and display the bar chart for the average earnings by year
+        generateBarChart(averageEarnings);
+    }
+
+    // Class to store each game's data (release year and total earnings)
+    static class GameData {
+        int releaseYear;
+        double totalMoney;
+
+        public GameData(int releaseYear, double totalMoney) {
+            this.releaseYear = releaseYear;
+            this.totalMoney = totalMoney;
+        }
+    }
+
+    // Open file chooser dialog to select CSV file
+    public static String selectFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select CSV File");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("CSV Files", "csv"));
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile().getAbsolutePath();
+        } else {
+            return null; // User canceled file selection
+        }
+    }
+
+    // Read CSV file and parse data into a list of GameData objects
+    public static List<GameData> readCSV(String csvFile) {
+        List<GameData> gameDataList = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
+            String line;
+            reader.readLine(); // Skip header row
+            while ((line = reader.readLine()) != null) {
+                String[] tokens = line.split(",");
+                try {
+                    // Assuming the release year is the last column and total earnings are second to last
+                    int releaseYear = Integer.parseInt(tokens[tokens.length - 1].trim());  // Last column is Release Year
+                    double totalMoney = Double.parseDouble(tokens[tokens.length - 2].trim());  // Second last column is TotalMoney
+                    gameDataList.add(new GameData(releaseYear, totalMoney));
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parsing data: " + Arrays.toString(tokens));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return gameDataList;
+    }
+
+    // Process the data to group earnings by release year
+    public static Map<Integer, List<Double>> processData(List<GameData> gameDataList) {
+        Map<Integer, List<Double>> earningsByYear = new HashMap<>();
+        for (GameData game : gameDataList) {
+            earningsByYear
+                .computeIfAbsent(game.releaseYear, k -> new ArrayList<>())
+                .add(game.totalMoney);
+        }
+        return earningsByYear;
+    }
+
+    // Calculate the average earnings per release year
+    public static Map<Integer, Double> calculateAverageEarnings(Map<Integer, List<Double>> earningsByYear) {
+        Map<Integer, Double> averageEarnings = new HashMap<>();
+        for (Map.Entry<Integer, List<Double>> entry : earningsByYear.entrySet()) {
+            int year = entry.getKey();
+            List<Double> earnings = entry.getValue();
+            double sum = 0;
+            for (double earning : earnings) {
+                sum += earning;
+            }
+            averageEarnings.put(year, sum / earnings.size());  // Calculate average
+        }
+        return averageEarnings;
+    }
+
+    // Print the summary of average earnings by year
+    public static void printSummary(Map<Integer, Double> averageEarnings) {
+        System.out.println("Average Earnings by Release Year:");
+        for (Map.Entry<Integer, Double> entry : averageEarnings.entrySet()) {
+            System.out.printf("Year: %d, Average Earnings: $%.2f%n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    // Generate a bar chart for the average earnings by release year
+    public static void generateBarChart(Map<Integer, Double> averageEarnings) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        int[] allYears = {11, 1981, 1989, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 
+                          2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 
+                          2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 
+                          2016, 2017, 2018, 2019, 2020};
+
+        for (int year : allYears) {
+            double earnings = averageEarnings.getOrDefault(year, 0.0);
+            dataset.addValue(earnings, "Average Earnings", String.valueOf(year));
+        }
+
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Average Earnings by Release Year",
+                "Release Year",
+                "Average Earnings",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true, true, false
+        );
+
+        CategoryPlot plot = barChart.getCategoryPlot();
+        CategoryAxis axis = plot.getDomainAxis();
+        axis.setTickLabelFont(new Font("Arial", Font.PLAIN, 10));
+        axis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4.0)); // Rotate labels
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setPreferredSize(new Dimension(800, 600));
+        panel.add(chartPanel, BorderLayout.CENTER);
+
+        JButton exportButton = new JButton("Export Average Earnings to CSV");
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Specify a file to save");
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("CSV Files", "csv"));
+
+                int userSelection = fileChooser.showSaveDialog(null);
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    File fileToSave = fileChooser.getSelectedFile();
+                    if (!fileToSave.getAbsolutePath().endsWith(".csv")) {
+                        fileToSave = new File(fileToSave.getAbsolutePath() + ".csv");
+                    }
+                    exportProcessedData(averageEarnings, fileToSave);
+                }
+            }
+        });
+
+        panel.add(exportButton, BorderLayout.SOUTH);
+
+        JFrame frame = new JFrame("Game Earnings Analysis");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(panel);
+        frame.pack();
+        frame.setLocationRelativeTo(null); // Center the frame
+        frame.setVisible(true);
+    }
+
+    // Export the processed data to a CSV file
+    public static void exportProcessedData(Map<Integer, Double> averageEarnings, File file) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write("Year,Average Earnings\n");
+            for (Map.Entry<Integer, Double> entry : averageEarnings.entrySet()) {
+                writer.write(entry.getKey() + "," + entry.getValue() + "\n");
+            }
+            System.out.println("Data exported successfully to " + file.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
